@@ -68,32 +68,32 @@
     k: { action: { character: ';' }, label: { text: ';' } },
     l: { action: { character: "'" }, label: { text: "'" } },
     z: {
-      action: { character: 'V' },
+      action: { sendKeys: 'vjt' }, // 箭头符号
       label: { systemImageName: 'av.remote.fill' },
       // center: { x: 0.5, y: 0.8 },  // 不同于其他按键的偏移，可这样设置，例如这里zxcvbnm的下划都在按键正下方
     },
     x: {
-      action: { sendKeys: 'onl' },
+      action: { sendKeys: 'vsj' }, // 
       label: { systemImageName: 'clock.arrow.circlepath' },
       // center: { x: 0.5, y: 0.8 },
     },
     c: {
-      action: { sendKeys: 'orq' },
+      action: { sendKeys: 'rq' }, // 日期快捷键
       label: { systemImageName: 'calendar' },
       // center: { x: 0.5, y: 0.8 },
     },
     v: {
-      action: { sendKeys: 'osj' },
+      action: { sendKeys: 'sj' }, // 时间快捷键
       label: { systemImageName: 'clock.circle' },
       // center: { x: 0.5, y: 0.8 },
     },
     b: {
-      action: { sendKeys: 'R' },
+      action: { sendKeys: 'vhb' }, // 货币符号
       label: { systemImageName: 'chineseyuanrenminbisign.square.fill' },
       // center: { x: 0.5, y: 0.8 },
     },
     n: {
-      action: { sendKeys: 'N' },
+      action: { sendKeys: 'vrq' }, // 日期符号
       label: { systemImageName: 'calendar.badge.exclamationmark' },
       // center: { x: 0.5, y: 0.8 },
     },
