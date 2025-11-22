@@ -1,0 +1,151 @@
+name: CSkin Release
+
+on:
+  push:
+    tags:
+      - 'release/**'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract tag name
+        id: tag
+        run: |
+          # Remove 'release/' prefix from tag
+          TAG_NAME="${GITHUB_REF#refs/tags/release/}"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Tag name without prefix: $TAG_NAME"
+
+      - name: Check and package 元书- directories
+        id: yuanshu_dirs
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          echo "Checking for updates on: $TODAY"
+          
+          PACKAGED_FILES=""
+          
+          # Find all directories starting with "元书-" in Skin_Keyboard
+          for dir in Skin_Keyboard/元书-*; do
+            if [ -d "$dir" ]; then
+              echo "Checking directory: $dir"
+              
+              # Check if there are any commits today in this directory
+              COMMITS_TODAY=$(git log --since="$TODAY 00:00:00" --until="$TODAY 23:59:59" --pretty=format:"%H" -- "$dir" | wc -l)
+              
+              if [ "$COMMITS_TODAY" -gt 0 ]; then
+                echo "Found $COMMITS_TODAY commits today in $dir"
+                
+                # Get directory name without path
+                DIR_NAME=$(basename "$dir")
+                
+                # Create zip file
+                cd Skin_Keyboard
+                zip -r "${DIR_NAME}.zip" "${DIR_NAME}"
+                
+                # Rename to .cskin with tag name
+                mv "${DIR_NAME}.zip" "${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+                
+                # Add to list of packaged files
+                if [ -z "$PACKAGED_FILES" ]; then
+                  PACKAGED_FILES="Skin_Keyboard/${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+                else
+                  PACKAGED_FILES="$PACKAGED_FILES
+          Skin_Keyboard/${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+                fi
+                
+                cd ..
+                echo "Packaged: ${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+              else
+                echo "No commits today in $dir, skipping"
+              fi
+            fi
+          done
+          
+          # Save packaged files list
+          echo "packaged_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$PACKAGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Check and package 26键-万象-元书 directory
+        id: wanxiang_dir
+        run: |
+          TODAY=$(date -u +%Y-%m-%d)
+          TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
+          
+          PACKAGED_FILES=""
+          
+          if [ -d "$TARGET_DIR" ]; then
+            echo "Checking directory: $TARGET_DIR"
+            
+            # Check if there are any commits today in this directory
+            COMMITS_TODAY=$(git log --since="$TODAY 00:00:00" --until="$TODAY 23:59:59" --pretty=format:"%H" -- "$TARGET_DIR" | wc -l)
+            
+            if [ "$COMMITS_TODAY" -gt 0 ]; then
+              echo "Found $COMMITS_TODAY commits today in $TARGET_DIR"
+              
+              # Create zip file
+              cd Skin_Keyboard/万象-元书
+              zip -r "26键-万象-元书.zip" "26键-万象-元书"
+              
+              # Rename to .cskin with tag name
+              mv "26键-万象-元书.zip" "26键-万象-元书_${{ steps.tag.outputs.tag_name }}.cskin"
+              
+              PACKAGED_FILES="Skin_Keyboard/万象-元书/26键-万象-元书_${{ steps.tag.outputs.tag_name }}.cskin"
+              
+              cd ../..
+              echo "Packaged: 26键-万象-元书_${{ steps.tag.outputs.tag_name }}.cskin"
+            else
+              echo "No commits today in $TARGET_DIR, skipping"
+            fi
+          else
+            echo "Directory $TARGET_DIR does not exist"
+          fi
+          
+          # Save packaged files list
+          echo "packaged_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$PACKAGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Combine packaged files list
+        id: all_files
+        run: |
+          FILES="${{ steps.yuanshu_dirs.outputs.packaged_files }}
+          ${{ steps.wanxiang_dir.outputs.packaged_files }}"
+          
+          # Remove empty lines
+          FILES=$(echo "$FILES" | sed '/^$/d')
+          
+          echo "All packaged files:"
+          echo "$FILES"
+          
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        if: steps.all_files.outputs.files != ''
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ steps.tag.outputs.tag_name }}
+          body: |
+            CSkin packages built from updates on $(date -u +%Y-%m-%d)
+            
+            Packaged files:
+            ${{ steps.all_files.outputs.files }}
+          files: ${{ steps.all_files.outputs.files }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: No files to release
+        if: steps.all_files.outputs.files == ''
+        run: |
+          echo "No directories with today's updates found. No release created."
+          exit 0
