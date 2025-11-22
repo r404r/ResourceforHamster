@@ -64,7 +64,8 @@ local getToolBar(theme) =
       { label: '2', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSettings' }, styleName: 'toolbarButtonKeyboardSettingsStyle' },
       { label: '3', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSkins' }, styleName: 'toolbarButtonKeyboardSkinsStyle' },
       { label: '4', action: { shortcut: '#keyboardPerformance' }, styleName: 'toolbarButtonKeyboardPerfomanceStyle' },
-      { label: '5', action: { shortcut: '#toggleEmbeddedInputMode' }, styleName: 'toolbarButtonEmbeddingToggleStyle' },
+      { label: '5', action: { shortcutCommand: '#toggleScriptView' }, styleName: 'toolbarButtonScriptStyle' },
+      { label: '6', action: { shortcut: '#toggleEmbeddedInputMode' }, styleName: 'toolbarButtonEmbeddingToggleStyle' },
     ],
 
     toolbarButtonKeyboardSelectionStyle: {
