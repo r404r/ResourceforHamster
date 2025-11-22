@@ -1038,7 +1038,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     },
     spaceButtonForegroundStyle1: {
       buttonStyleType: 'text',
-      text: '万象',
+      text: 'Rime',
       normalColor: color[theme]['划动字符颜色'],
       highlightColor: color[theme]['划动字符颜色'],
       fontSize: fontSize['按键前景文字大小'] - 10,
