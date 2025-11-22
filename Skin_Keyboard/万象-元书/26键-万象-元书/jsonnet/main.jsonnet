@@ -1,6 +1,6 @@
 local config = {
-  author: 'BlackCCCat',
-  name: '万象键盘',
+  author: 'BlackCCCat & r404r',
+  name: '万象键盘r404r',
   pinyin: {
     iPhone: {
       portrait: 'pinyin_26_portrait',
