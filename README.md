@@ -1,3 +1,9 @@
+# 介绍
+fork 自 [BlackCCCat](https://github.com/BlackCCCat/ResourceforHamster)
+
+
+收集了其它来自网络的 **元书** 键盘皮肤，主要是自己只用，若有侵权请联系我。
+
 # ResourceforHamster
 - ~~[自定义键盘配置](https://github.com/BlackCCCat/ResourceforHamster/tree/main/Custom_Keyboard)~~ 不推荐使用
 - [皮肤配置](https://github.com/BlackCCCat/ResourceforHamster/tree/main/Skin_Keyboard)
