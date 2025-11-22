@@ -135,6 +135,11 @@ jobs:
           echo "files<<EOF" >> $GITHUB_OUTPUT
           echo "$FILES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Save build date
+          BUILD_DATE=$(date -u +%Y-%m-%d)
+          echo "build_date=$BUILD_DATE" >> $GITHUB_OUTPUT
+          echo "Build date: $BUILD_DATE"
 
       - name: Create Release
         if: steps.all_files.outputs.files != ''
@@ -143,10 +148,16 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ steps.tag.outputs.tag_name }}
           body: |
-            CSkin packages built from updates on $(date -u +%Y-%m-%d)
+            ## 元书 皮肤包发布
+
+            构建日期： ${{ steps.all_files.outputs.build_date }}
             
-            Packaged files:
+            ### 包含文件：
             ${{ steps.all_files.outputs.files }}
+
+            ### 使用说明：
+            下载 .cskin 文件后，在元书输入法中导入即可，或者在iOS中直接点击此文件，选择元书输入法打开
+            
           files: ${{ steps.all_files.outputs.files }}
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
