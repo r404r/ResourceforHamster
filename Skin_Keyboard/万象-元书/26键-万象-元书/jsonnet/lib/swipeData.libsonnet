@@ -68,7 +68,7 @@
     k: { action: { character: ';' }, label: { text: ';' } },
     l: { action: { character: "'" }, label: { text: "'" } },
     z: {
-      action: { character: 'vjt' },
+      action: { sendKeys: 'vjt' },
       label: { systemImageName: 'arrowshape.up.circle.fill' },
       // center: { x: 0.5, y: 0.8 },  // 不同于其他按键的偏移，可这样设置，例如这里zxcvbnm的下划都在按键正下方
     },
@@ -99,10 +99,15 @@
     },
     m: {
       action: { shortcut: '#简繁切换' }, // 繁简转换
-      label: { systemImageName: 'translate' },
+      label: { text: '繁' },
+      // label: { systemImageName: 'translate' },
       // center: { x: 0.5, y: 0.8 },
     },
-    shift: { action: { shortcut: '#中英切换' } }, // 英文
+    shift: { 
+      action: { shortcut: '#中英切换' },
+      label: { systemImageName: 'translate' },
+      // center: { x: 0.5, y: 0.8 },
+    }, // 英文
     // '123': { action: { shortcut: '#方案切换' } },
     // space: { action: { shortcut: '#三选上屏' } },
     // spaceSecond: { action: { shortcut: '#三选上屏' } },
