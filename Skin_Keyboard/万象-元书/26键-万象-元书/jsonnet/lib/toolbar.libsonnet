@@ -25,20 +25,20 @@ local getToolBar(theme) =
           subviews: [
             // { Cell: 'toolbarButtonOpenAppStyle' },
             { Cell: 'toolbarSlideButtons2' },  // 滑动工具栏 包含 app相关内容
-            { Cell: 'toolbarSlideButtons' },  // 滑动工具栏 包含 谷歌搜索、浏览器打开、App Store搜索
+            // { Cell: 'toolbarSlideButtons' },  // 滑动工具栏 包含 谷歌搜索、浏览器打开、App Store搜索
             // { Cell: 'toolbarButtonKeyboardSettingsStyle' },  //键盘设置
             // { Cell: 'toolbarButtonRimeSwitcherStyle' },  // 方案
             // { Cell: 'toolbarButtonEmbeddingToggleStyle' },  //内嵌开关
-            // { Cell: 'toolbarButtonPanelStyle'},  // 面板
+            { Cell: 'toolbarButtonPanelStyle'},  // 面板
             // { Cell: 'toolbarButtonswitchKeyboardStyle'},  // 切换中英键盘
             // { Cell: 'toolbarButtonUndoStyle' },  // 撤销
             // { Cell: 'toolbarButtonRedoStyle' },  //重做
             // { Cell: 'toolbarButtonAppleStyle' },  // App Store搜索
             // { Cell: 'toolbarButtonGoogleStyle' },  // 谷歌搜索
             // { Cell: 'toolbarButtonSafariStyle' },  // 浏览器打开
-            // { Cell: 'toolbarButtonSymbolStyle' },  // 符号
+            { Cell: 'toolbarButtonSymbolStyle' },  // 符号
             // { Cell: 'toolbarButtonEmojiStyle' },  // 表情
-            { Cell: 'toolbarButtonScriptStyle' },  // 脚本
+            // { Cell: 'toolbarButtonScriptStyle' },  // 脚本
             { Cell: 'toolbarButtonNoteStyle' },  // 常用语
             { Cell: 'toolbarButtonClipboardStyle' },  // 剪切板
             { Cell: 'toolbarButtonKeyboardSelectionStyle' },  // 键盘相关功能，包括收起键盘，切换单手键盘
@@ -60,11 +60,11 @@ local getToolBar(theme) =
     },
     horizontalSymbolsDataSource2: [
       { label: '0', action: { openURL: 'hamster3://' }, styleName: 'toolbarButtonOpenAppStyle' },
-      { label: '1', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSettings' }, styleName: 'toolbarButtonKeyboardSettingsStyle' },
-      { label: '2', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSkins' }, styleName: 'toolbarButtonKeyboardSkinsStyle' },
-      { label: '5', action: { shortcut: '#keyboardPerformance' }, styleName: 'toolbarButtonKeyboardPerfomanceStyle' },
-      { label: '3', action: { shortcut: '#toggleEmbeddedInputMode' }, styleName: 'toolbarButtonEmbeddingToggleStyle' },
-      { label: '4', action: { shortcut: '#RimeSwitcher' }, styleName: 'toolbarButtonRimeSwitcherStyle' },
+      { label: '1', action: { shortcut: '#RimeSwitcher' }, styleName: 'toolbarButtonRimeSwitcherStyle' },
+      { label: '2', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSettings' }, styleName: 'toolbarButtonKeyboardSettingsStyle' },
+      { label: '3', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSkins' }, styleName: 'toolbarButtonKeyboardSkinsStyle' },
+      { label: '4', action: { shortcut: '#keyboardPerformance' }, styleName: 'toolbarButtonKeyboardPerfomanceStyle' },
+      { label: '5', action: { shortcut: '#toggleEmbeddedInputMode' }, styleName: 'toolbarButtonEmbeddingToggleStyle' },
     ],
 
     toolbarButtonKeyboardSelectionStyle: {
