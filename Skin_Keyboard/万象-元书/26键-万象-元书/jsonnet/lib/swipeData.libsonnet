@@ -68,38 +68,39 @@
     k: { action: { character: ';' }, label: { text: ';' } },
     l: { action: { character: "'" }, label: { text: "'" } },
     z: {
-      action: { character: 'V' },
-      label: { systemImageName: 'av.remote.fill' },
+      action: { character: 'vjt' },
+      label: { systemImageName: 'arrowshape.up.circle.fill' },
       // center: { x: 0.5, y: 0.8 },  // 不同于其他按键的偏移，可这样设置，例如这里zxcvbnm的下划都在按键正下方
     },
     x: {
-      action: { sendKeys: 'onl' },
+      action: { sendKeys: 'vsj' },
       label: { systemImageName: 'clock.arrow.circlepath' },
       // center: { x: 0.5, y: 0.8 },
     },
     c: {
-      action: { sendKeys: 'orq' },
+      action: { sendKeys: 'rq' },
       label: { systemImageName: 'calendar' },
       // center: { x: 0.5, y: 0.8 },
     },
     v: {
-      action: { sendKeys: 'osj' },
+      action: { sendKeys: 'sj' },
       label: { systemImageName: 'clock.circle' },
       // center: { x: 0.5, y: 0.8 },
     },
     b: {
-      action: { sendKeys: 'R' },
+      action: { sendKeys: 'vhb' },
       label: { systemImageName: 'chineseyuanrenminbisign.square.fill' },
       // center: { x: 0.5, y: 0.8 },
     },
     n: {
-      action: { sendKeys: 'N' },
+      action: { sendKeys: 'vrq' },
       label: { systemImageName: 'calendar.badge.exclamationmark' },
       // center: { x: 0.5, y: 0.8 },
     },
     m: {
-      action: { character: '`' },
-      label: { systemImageName: 'rectangle.3.group.fill' },
+      action: { shortcut: '#简繁切换' }, // 繁简转换
+      // shortcut: '#简繁切换',
+      label: { systemImageName: 'translate' },
       // center: { x: 0.5, y: 0.8 },
     },
     // '123': { action: { shortcut: '#方案切换' } },
