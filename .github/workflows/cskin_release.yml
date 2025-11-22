@@ -91,15 +91,15 @@ jobs:
               
               # Create zip file
               cd Skin_Keyboard/万象-元书
-              zip -r "26键-万象-元书.zip" "26键-万象-元书"
+              zip -r "26keys-wanxiang-ys.zip" "26键-万象-元书"
               
               # Rename to .cskin with tag name
-              mv "26键-万象-元书.zip" "26键-万象-元书_${{ steps.tag.outputs.tag_name }}.cskin"
+              mv "26keys-wanxiang-ys.zip" "26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
               
-              PACKAGED_FILES="Skin_Keyboard/万象-元书/26键-万象-元书_${{ steps.tag.outputs.tag_name }}.cskin"
+              PACKAGED_FILES="Skin_Keyboard/万象-元书/26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
               
               cd ../..
-              echo "Packaged: 26键-万象-元书_${{ steps.tag.outputs.tag_name }}.cskin"
+              echo "Packaged: 26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
             else
               echo "No commits today in $TARGET_DIR, skipping"
             fi
