@@ -25,6 +25,10 @@ jobs:
       - name: Check and package 元书- directories
         id: yuanshu_dirs
         run: |
+          # Set UTF-8 locale to handle Chinese characters properly
+          export LANG=C.UTF-8
+          export LC_ALL=C.UTF-8
+          
           TODAY=$(date -u +%Y-%m-%d)
           echo "Checking for updates on: $TODAY"
           
@@ -75,6 +79,10 @@ jobs:
       - name: Check and package 26键-万象-元书 directory
         id: wanxiang_dir
         run: |
+          # Set UTF-8 locale to handle Chinese characters properly
+          export LANG=C.UTF-8
+          export LC_ALL=C.UTF-8
+          
           TODAY=$(date -u +%Y-%m-%d)
           TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
           
