@@ -1042,7 +1042,7 @@ local keyboard(theme, orientation, keyboardLayout) =
       normalColor: color[theme]['划动字符颜色'],
       highlightColor: color[theme]['划动字符颜色'],
       fontSize: fontSize['按键前景文字大小'] - 10,
-      center: { x: 0.9, y: 0.8 },
+      center: { x: 0.8, y: 0.8 },
     },
     // 横屏左边空格按键
     spaceFirstButton: createButton(
@@ -1119,7 +1119,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     },
     spaceSecondButtonForegroundStyle1: {
       buttonStyleType: 'text',
-      text: '万象',
+      text: 'Rime',
       normalColor: color[theme]['划动字符颜色'],
       highlightColor: color[theme]['划动字符颜色'],
       fontSize: fontSize['按键前景文字大小'] - 10,
@@ -1157,6 +1157,10 @@ local keyboard(theme, orientation, keyboardLayout) =
       backgroundStyle: 'alphabeticBackgroundStyle',
       action: { character: '.' },
       repeatAction: { character: '.' },
+      foregroundStyle: [
+        'spaceRightButtonForegroundStyle',
+        'spaceRightButtonForegroundStyle2',
+      ],
       notification: [
         'spaceRightButtonPreeditNotification',
       ],
@@ -1177,19 +1181,19 @@ local keyboard(theme, orientation, keyboardLayout) =
 
     spaceRightButtonForegroundStyle: {
       buttonStyleType: 'text',
-      text: '。',
+      text: '，',
       normalColor: color[theme]['按键前景颜色'],
       highlightColor: color[theme]['按键前景颜色'],
-      fontSize: fontSize['按键前景文字大小'],
-      // center: { x: 0.64, y: 0.45 },
+      fontSize: fontSize['按键前景文字大小'] - 2,
+      center: { x: 0.62, y: 0.2 },
     },
     spaceRightButtonForegroundStyle2: {
       buttonStyleType: 'text',
       text: '。',
       normalColor: color[theme]['按键前景颜色'],
       highlightColor: color[theme]['按键前景颜色'],
-      fontSize: fontSize['按键前景文字大小'] - 2,
-      // center: { x: 0.6, y: 0.3 },
+      fontSize: fontSize['按键前景文字大小'],
+      center: { x: 0.6, y: 0.45 },
     },
 
     local slBtn = createButton(

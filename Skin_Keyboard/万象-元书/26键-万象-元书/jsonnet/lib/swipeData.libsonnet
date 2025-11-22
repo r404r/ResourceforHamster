@@ -37,12 +37,12 @@
     m: { action: { character: '?' }, label: { text: '?' } },
     '123': { action: { keyboardType: 'symbolic' } },
     spaceLeft: { action: { character: '.' } },
-    spaceRight: { action: { symbol: '.' } },
+    spaceRight: { action: { character: ',' } },
     // space: { action: { shortcut: '#次选上屏' } },
     // spaceSecond: { action: { shortcut: '#次选上屏' } },
     backspace: { action: { shortcut: '#deleteText' } },
     enter: { action: { shortcut: '#换行' } },
-    // shift: { action: { character: "'" } },
+    shift: { action: { shortcut: '#简繁切换' } }, // 繁简转换
     // "symbol": {"action": { "character": "。" }, "label": {"text": "。"}},
     // 可用字段见holdSymbolsData.libsonnet
 
@@ -99,10 +99,10 @@
     },
     m: {
       action: { shortcut: '#简繁切换' }, // 繁简转换
-      // shortcut: '#简繁切换',
       label: { systemImageName: 'translate' },
       // center: { x: 0.5, y: 0.8 },
     },
+    shift: { action: { shortcut: '#中英切换' } }, // 英文
     // '123': { action: { shortcut: '#方案切换' } },
     // space: { action: { shortcut: '#三选上屏' } },
     // spaceSecond: { action: { shortcut: '#三选上屏' } },

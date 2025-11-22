@@ -74,11 +74,11 @@ local color = import 'color.libsonnet';
                   HStack: {
                     subviews: [
                       { Cell: '123Button' },
-                      // { Cell: 'cn2enButton' },
-                      { Cell: 'spaceLeftButton' },
-                      { Cell: 'spaceButton' },
                       { Cell: 'cn2enButton' },
-                      // { Cell: 'spaceRightButton' },
+                      // { Cell: 'spaceLeftButton' },
+                      { Cell: 'spaceButton' },
+                      // { Cell: 'cn2enButton' },
+                      { Cell: 'spaceRightButton' },
                       { Cell: 'enterButton' },
                     ],
                   },
@@ -204,8 +204,8 @@ local color = import 'color.libsonnet';
                         HStack: {
                           subviews: [
                             { Cell: '123Button' },
-                            // { Cell: 'cn2enButton' },
-                            { Cell: 'spaceLeftButton' },
+                            { Cell: 'cn2enButton' },
+                            // { Cell: 'spaceLeftButton' },
                             { Cell: 'spaceFirstButton' },
                           ],
                         },
@@ -259,8 +259,8 @@ local color = import 'color.libsonnet';
                         HStack: {
                           subviews: [
                             { Cell: 'spaceSecondButton' },
-                            { Cell: 'cn2enButton' },
-                            // { Cell: 'spaceRightButton' },
+                            // { Cell: 'cn2enButton' },
+                            { Cell: 'spaceRightButton' },
                             { Cell: 'enterButton' },
                           ],
                         },
@@ -382,11 +382,11 @@ local color = import 'color.libsonnet';
                   HStack: {
                     subviews: [
                       { Cell: '123Button' },
-                      // { Cell: 'en2cnButton' },
-                      { Cell: 'spaceLeftButton' },
-                      { Cell: 'spaceButton' },
                       { Cell: 'en2cnButton' },
-                      // { Cell: 'spaceRightButton' },
+                      // { Cell: 'spaceLeftButton' },
+                      { Cell: 'spaceButton' },
+                      // { Cell: 'en2cnButton' },
+                      { Cell: 'spaceRightButton' },
                       { Cell: 'enterButton' },
                     ],
                   },
@@ -513,8 +513,8 @@ local color = import 'color.libsonnet';
                         HStack: {
                           subviews: [
                             { Cell: '123Button' },
-                            // { Cell: 'en2cnButton' },
-                            { Cell: 'spaceLeftButton' },
+                            { Cell: 'en2cnButton' },
+                            // { Cell: 'spaceLeftButton' },
                             { Cell: 'spaceFirstButton' },
                           ],
                         },
@@ -568,8 +568,8 @@ local color = import 'color.libsonnet';
                         HStack: {
                           subviews: [
                             { Cell: 'spaceSecondButton' },
-                            { Cell: 'en2cnButton' },
-                            // { Cell: 'spaceRightButton' },
+                            // { Cell: 'en2cnButton' },
+                            { Cell: 'spaceRightButton' },
                             { Cell: 'enterButton' },
                           ],
                         },
