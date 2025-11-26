@@ -1036,14 +1036,13 @@ local keyboard(theme, orientation, keyboardLayout) =
       fontSize: fontSize['按键前景文字大小'] - 3,
       center: center['功能键前景文字偏移'],
     },
-    spaceButtonForegroundStyle1: {
-      buttonStyleType: 'text',
-      text: 'Rime',
-      normalColor: color[theme]['划动字符颜色'],
-      highlightColor: color[theme]['划动字符颜色'],
-      fontSize: fontSize['按键前景文字大小'] - 10,
-      center: { x: 0.8, y: 0.8 },
-    },
+    spaceButtonForegroundStyle1: utils.makeTextStyle(
+        '$rimeSchemaName', // text
+        fontSize['按键前景文字大小'] - 10, // fontSize
+        color[theme]['划动字符颜色'], //normalColor
+        color[theme]['划动字符颜色'], //highlightColor
+        { x: 0.5, y: 0.75 } // center
+    ),
     // 横屏左边空格按键
     spaceFirstButton: createButton(
       'spaceFirst',
