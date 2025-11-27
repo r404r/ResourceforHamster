@@ -1,4 +1,6 @@
-local is_cap = import '../custom/Custom.libsonnet';
+
+local is_cap = import '../custom/Custom.libsonnet';
+
 
 
 // 图片型
@@ -54,14 +56,14 @@ local funcKeyMap = {
 };
 
 local funcKeysystemImageNameMap = {
-  left: 'arrowshape.turn.up.left.fill',
+  left: 'arrowshape.left.fill',
   head: 'text.line.first.and.arrowtriangle.forward',
   select: 'selection.pin.in.out',
   cut: 'scissors',
   copy: 'arrow.up.doc.on.clipboard',
   paste: 'doc.on.clipboard.fill',
   tail: 'text.line.last.and.arrowtriangle.forward',
-  right: 'arrowshape.turn.up.right.fill',
+  right: 'arrowshape.right.fill',
 };
 
 local funcKeyPreeditsystemImageNameMap = {
