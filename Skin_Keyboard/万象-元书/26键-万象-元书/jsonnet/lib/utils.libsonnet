@@ -1,3 +1,6 @@
+local is_cap = import '../custom/Custom.libsonnet';
+
+
 // 图片型
 
 // key: 按键名, a-z, shift, space....
@@ -51,14 +54,14 @@ local funcKeyMap = {
 };
 
 local funcKeysystemImageNameMap = {
-  left: 'arrowshape.left.fill',
+  left: 'arrowshape.turn.up.left.fill',
   head: 'text.line.first.and.arrowtriangle.forward',
   select: 'selection.pin.in.out',
   cut: 'scissors',
   copy: 'arrow.up.doc.on.clipboard',
   paste: 'doc.on.clipboard.fill',
   tail: 'text.line.last.and.arrowtriangle.forward',
-  right: 'arrowshape.right.fill',
+  right: 'arrowshape.turn.up.right.fill',
 };
 
 local funcKeyPreeditsystemImageNameMap = {
@@ -197,7 +200,7 @@ local symbolKeyMap = {
 local genPinyinStyles(fontSize, color, theme, center) =
   {
     [keyName + 'ButtonForegroundStyle']: makeTextStyle(
-      keyMap[keyName],
+      if is_cap.is_letter_capital then CapkeyMap[keyName] else keyMap[keyName],
       fontSize['按键前景文字大小'],
       color[theme]['按键前景颜色'],
       color[theme]['按键前景颜色'],

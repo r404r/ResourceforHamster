@@ -1,4 +1,5 @@
-local LayoutType = import '../lib/funcButtonRowSelector.libsonnet';
+local LayoutType = import '../custom/Custom.libsonnet';
+
 {
   /*
   说明:
