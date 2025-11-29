@@ -29,8 +29,9 @@ jobs:
           export LANG=C.UTF-8
           export LC_ALL=C.UTF-8
           
+          # Use UTC date but check commits in the last 24 hours to handle timezone differences
           TODAY=$(date -u +%Y-%m-%d)
-          echo "Checking for updates on: $TODAY"
+          echo "Checking for updates on: $TODAY (UTC)"
           
           PACKAGED_FILES=""
           
@@ -39,8 +40,9 @@ jobs:
             if [ -d "$dir" ]; then
               echo "Checking directory: $dir"
               
-              # Check if there are any commits today in this directory
-              COMMITS_TODAY=$(git log --since="$TODAY 00:00:00" --until="$TODAY 23:59:59" --pretty=format:"%H" -- "$dir" | wc -l)
+              # Check if there are any commits in the last 24 hours in this directory
+              # Using --since="24 hours ago" to handle timezone differences
+              COMMITS_TODAY=$(git log --since="24 hours ago" --pretty=format:"%H" -- "$dir" | wc -l)
               
               if [ "$COMMITS_TODAY" -gt 0 ]; then
                 echo "Found $COMMITS_TODAY commits today in $dir"
@@ -84,6 +86,7 @@ jobs:
           export LC_ALL=C.UTF-8
           
           TODAY=$(date -u +%Y-%m-%d)
+          echo "Checking for updates on: $TODAY (UTC)"
           TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
           
           PACKAGED_FILES=""
@@ -91,8 +94,9 @@ jobs:
           if [ -d "$TARGET_DIR" ]; then
             echo "Checking directory: $TARGET_DIR"
             
-            # Check if there are any commits today in this directory
-            COMMITS_TODAY=$(git log --since="$TODAY 00:00:00" --until="$TODAY 23:59:59" --pretty=format:"%H" -- "$TARGET_DIR" | wc -l)
+            # Check if there are any commits in the last 24 hours in this directory
+            # Using --since="24 hours ago" to handle timezone differences
+            COMMITS_TODAY=$(git log --since="24 hours ago" --pretty=format:"%H" -- "$TARGET_DIR" | wc -l)
             
             if [ "$COMMITS_TODAY" -gt 0 ]; then
               echo "Found $COMMITS_TODAY commits today in $TARGET_DIR"
