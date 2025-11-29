@@ -1,20 +1,32 @@
+# r404r修改版说明
+
+- 注，基于 [BlackCCCat](https://github.com/BlackCCCat/ResourceforHamster) 修改。
+- 基于个人喜好，替换了 `中英切换` 和 `逗号句号` 按钮位置
+- 基于个人喜好，调整了q-p上滑下滑按钮（数字为下滑）
+- 修改了左右移动箭头的显示icon
+- 修改了弹出panel，按照使用习惯追加了一排按钮
+- 基于使用习惯，修改了toolbar的默认显示
+
+
 # 使用说明
 
-1. 请和[自定义配置](../../Input_Method/万象拼音/Rime4Hamster/)一起使用，尤其是自定义按键部分
+1. 请和[自定义配置](../../Input_Method/万象拼音/Rime4Hamster/)一起使用，尤其是自定义按键部分。 注：本修改版使用的是自定义拼音方案，仅保证常用功能兼容和匹配。
 2. 打开元书输入法键盘皮肤中的“启动皮肤开发者模式”，导入后点击皮肤，或者在导入皮肤后长按手动运行`main.jsonnet`，两种方式来生成皮肤配置文件
 3. 支持一些简单的自定义配置：
     - 支持取消工具栏下的功能按键：解压皮肤文件后，在`jsonnet/custom/Custom.libsonnet`中将`with_functions_row`设置为`false`
     - 支持键盘字母正常状态下显示为大写：解压皮肤文件后，在`jsonnet/custom/Custom.libsonnet`中将`is_letter_capital`设置为`true`
 
-## 万象拼音PRO
-- `26键-万象-元书.cskin`（对应release中`26-wanxiang.cskin`）
+## 元书skin文件（r404r修改版）
+- 请从 [release](https://github.com/r404r/ResourceforHamster/releases) 中 获取 `26keys-wanxiang-ys_vx.x.x.cskin
+`
 
 **外观**
 
-![demo](assets/keyboard.JPEG)
+![demo](assets/keyboard.png)
+![demo](assets/panel.png)
 
 ## 按键说明
-**以下为部分按键说明**
+**以下为部分按键说明** （注：r404r修改版未做大规模更新，以下说明暂沿用原版内容）
 > 推荐使用手动分页模式
 
 ### 非预编辑模式
