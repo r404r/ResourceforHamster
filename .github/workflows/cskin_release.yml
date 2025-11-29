@@ -29,9 +29,10 @@ jobs:
           export LANG=C.UTF-8
           export LC_ALL=C.UTF-8
           
-          # Use UTC date but check commits in the last 24 hours to handle timezone differences
-          TODAY=$(date -u +%Y-%m-%d)
-          echo "Checking for updates on: $TODAY (UTC)"
+          # Get the current commit (the one the tag points to)
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+          echo "Current commit: $CURRENT_COMMIT"
+          echo "Checking for updates in the last 5 commits from HEAD"
           
           PACKAGED_FILES=""
           
@@ -40,12 +41,16 @@ jobs:
             if [ -d "$dir" ]; then
               echo "Checking directory: $dir"
               
-              # Check if there are any commits in the last 24 hours in this directory
-              # Using --since="24 hours ago" to handle timezone differences
-              COMMITS_TODAY=$(git log --since="24 hours ago" --pretty=format:"%H" -- "$dir" | wc -l)
+              # Debug: Show recent commits in this directory
+              echo "Recent commits (last 5) in $dir:"
+              git log -5 --pretty=format:"%H %ai %s" -- "$dir" || echo "No commits found"
+              echo ""
               
-              if [ "$COMMITS_TODAY" -gt 0 ]; then
-                echo "Found $COMMITS_TODAY commits today in $dir"
+              # Check if there are any commits in the last 5 commits from HEAD in this directory
+              COMMITS_RECENT=$(git log -5 --pretty=format:"%H" -- "$dir" | wc -l)
+              
+              if [ "$COMMITS_RECENT" -gt 0 ]; then
+                echo "Found $COMMITS_RECENT recent commits in $dir"
                 
                 # Get directory name without path
                 DIR_NAME=$(basename "$dir")
@@ -68,7 +73,7 @@ jobs:
                 cd ..
                 echo "Packaged: ${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
               else
-                echo "No commits today in $dir, skipping"
+                echo "No recent commits in $dir, skipping"
               fi
             fi
           done
@@ -85,8 +90,9 @@ jobs:
           export LANG=C.UTF-8
           export LC_ALL=C.UTF-8
           
-          TODAY=$(date -u +%Y-%m-%d)
-          echo "Checking for updates on: $TODAY (UTC)"
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+          echo "Current commit: $CURRENT_COMMIT"
+          echo "Checking for updates in the last 5 commits from HEAD"
           TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
           
           PACKAGED_FILES=""
@@ -94,12 +100,16 @@ jobs:
           if [ -d "$TARGET_DIR" ]; then
             echo "Checking directory: $TARGET_DIR"
             
-            # Check if there are any commits in the last 24 hours in this directory
-            # Using --since="24 hours ago" to handle timezone differences
-            COMMITS_TODAY=$(git log --since="24 hours ago" --pretty=format:"%H" -- "$TARGET_DIR" | wc -l)
+            # Debug: Show recent commits in this directory
+            echo "Recent commits (last 5) in $TARGET_DIR:"
+            git log -5 --pretty=format:"%H %ai %s" -- "$TARGET_DIR" || echo "No commits found"
+            echo ""
             
-            if [ "$COMMITS_TODAY" -gt 0 ]; then
-              echo "Found $COMMITS_TODAY commits today in $TARGET_DIR"
+            # Check if there are any commits in the last 5 commits from HEAD in this directory
+            COMMITS_RECENT=$(git log -5 --pretty=format:"%H" -- "$TARGET_DIR" | wc -l)
+            
+            if [ "$COMMITS_RECENT" -gt 0 ]; then
+              echo "Found $COMMITS_RECENT recent commits in $TARGET_DIR"
               
               # Create zip file
               cd Skin_Keyboard/万象-元书
@@ -113,7 +123,7 @@ jobs:
               cd ../..
               echo "Packaged: 26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
             else
-              echo "No commits today in $TARGET_DIR, skipping"
+              echo "No recent commits in $TARGET_DIR, skipping"
             fi
           else
             echo "Directory $TARGET_DIR does not exist"
