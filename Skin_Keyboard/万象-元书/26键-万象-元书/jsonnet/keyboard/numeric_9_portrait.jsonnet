@@ -56,23 +56,7 @@ local keyboard(theme) =
     preeditHeight: others['竖屏']['preedit高度'],
     toolbarHeight: others['竖屏']['toolbar高度'],
     keyboardHeight: others['竖屏']['keyboard高度'],
-    preedit: {
-      insets: {
-        left: 8,
-        top: 2,
-      },
-      backgroundStyle: 'preeditBackgroundStyle',
-      foregroundStyle: 'preeditForegroundStyle',
-    },
-    preeditBackgroundStyle: {
-      buttonStyleType: 'geometry',
-      normalColor: color[theme]['键盘背景颜色'],
-    },
-    preeditForegroundStyle: {
-      textColor: color[theme]['候选字体未选中字体颜色'],
-      fontSize: fontSize['preedit区字体大小'],
-      fontWeight: 0,
-    },
+
 
     keyboardLayout: chooseLayout(LayoutType.with_functions_row),
     rowofFunctionStyle: {
@@ -237,6 +221,7 @@ local keyboard(theme) =
       action: 'backspace',
       repeatAction: 'backspace',
       swipeUpAction: { shortcut: '#deleteText' },
+      swipeDownAction: { shortcut: '#undo' },
     },
 
     backspaceButtonForegroundStyle: {
@@ -452,7 +437,7 @@ local keyboard(theme) =
     toolbar.getToolBar(theme) +
     utils.genNumberStyles(fontSize, color, theme, center) +
     utils.genFuncKeyStyles(fontSize, color, theme, center) +
-    functions.makeFunctionButtons('', {}, 'numeric') 
+    functions.makeFunctionButtons('', {}, 'numeric')
   ,
   // 导出keyboard给横屏用
   keyboard: keyboard,

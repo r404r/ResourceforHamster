@@ -76,6 +76,7 @@ local createBackslashNotification(key, bounds={}) = {
   notificationKeyboardAction: { sendKeys: 'backslash' },
 };
 
+
 // 26个按键前景批量生成
 
 
@@ -93,23 +94,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     preeditHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['preedit高度'],
     toolbarHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['toolbar高度'],
     keyboardHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['keyboard高度'],
-    preedit: {
-      insets: {
-        left: 8,
-        top: 2,
-      },
-      backgroundStyle: 'preeditBackgroundStyle',
-      foregroundStyle: 'preeditForegroundStyle',
-    },
-    preeditBackgroundStyle: {
-      buttonStyleType: 'geometry',
-      normalColor: color[theme]['键盘背景颜色'],
-    },
-    preeditForegroundStyle: {
-      textColor: color[theme]['候选字体未选中字体颜色'],
-      fontSize: fontSize['preedit区字体大小'],
-      fontWeight: 0,
-    },
+
 
     qButton: createButton(
       'q',
@@ -774,12 +759,32 @@ local keyboard(theme, orientation, keyboardLayout) =
         },
       ],
     },
+    cn2enButtonHintSymbolsStyleOf10: super['cn2enButtonHintSymbolsStyleOf10'] + {
+      foregroundStyle: [
+        {
+          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf10',
+          conditionKey: 'rime$mixed',
+          conditionValue: 'true',
+        },
+        {
+          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf11',
+          conditionKey: 'rime$zh_only',
+          conditionValue: 'true',
+        },
+        {
+          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf12',
+          conditionKey: 'rime$en_only',
+          conditionValue: 'true',
+        },
+      ],
+    },
     cn2enButtonHintSymbolsStyle: super['cn2enButtonHintSymbolsStyle'] + {
       symbolStyles: [
         'cn2enButtonHintSymbolsStyleOf0',
         'cn2enButtonHintSymbolsStyleOf4',
         'cn2enButtonHintSymbolsStyleOf6',
         'cn2enButtonHintSymbolsStyleOf8',
+        'cn2enButtonHintSymbolsStyleOf10',
       ],
     },
 
@@ -979,6 +984,7 @@ local keyboard(theme, orientation, keyboardLayout) =
       backgroundStyle: 'alphabeticBackgroundStyle',
       foregroundStyle: 'spaceRightButtonPreeditForegroundStyle',
       action: { sendKeys: 'Break' },
+      hintSymbolsStyle: 'cn2enButtonHintSymbolsStyle',  // 预编辑通知的长按菜单复用普通状态的长按菜单
     },
     spaceRightButtonPreeditForegroundStyle: {
       buttonStyleType: 'systemImage',

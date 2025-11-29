@@ -137,6 +137,7 @@ local LayoutType = import '../custom/Custom.libsonnet';
     // '123': { action: { shortcut: '#方案切换' } },
     // space: { action: { shortcut: '#三选上屏' } },
     // spaceSecond: { action: { shortcut: '#三选上屏' } },
+    backspace: { action: { shortcut: '#undo' } },
   },
 
   // 中文九键划动

@@ -15,6 +15,7 @@
 3. 支持一些简单的自定义配置：
     - 支持取消工具栏下的功能按键：解压皮肤文件后，在`jsonnet/custom/Custom.libsonnet`中将`with_functions_row`设置为`false`
     - 支持键盘字母正常状态下显示为大写：解压皮肤文件后，在`jsonnet/custom/Custom.libsonnet`中将`is_letter_capital`设置为`true`
+4. 可以通过[该快捷指令](https://www.icloud.com/shortcuts/c541ddb2a1614732b2c9fde38bb89be6)自动下载最新版本并导入到元书输入法中
 
 ## 元书skin文件（r404r修改版）
 - 请从 [release](https://github.com/r404r/ResourceforHamster/releases) 中 获取 `26keys-wanxiang-ys_vx.x.x.cskin
