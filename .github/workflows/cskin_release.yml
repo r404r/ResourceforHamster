@@ -22,8 +22,15 @@ jobs:
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Tag name without prefix: $TAG_NAME"
           
-          # Get tag message (annotation)
-          TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF#refs/tags/}")
+          # Get tag message (annotation), excluding PGP signature
+          TAG_MESSAGE=$(git for-each-ref --format='%(contents:subject)%0a%(contents:body)' "${GITHUB_REF}" | sed '/^-----BEGIN PGP SIGNATURE-----$/,/^-----END PGP SIGNATURE-----$/d' | sed '/^$/d')
+          
+          # If tag message is empty, try to get commit message
+          if [ -z "$TAG_MESSAGE" ]; then
+            echo "No tag annotation found, using commit message"
+            TAG_MESSAGE=$(git log -1 --pretty=format:%s "${GITHUB_REF}")
+          fi
+          
           echo "tag_message<<EOF" >> $GITHUB_OUTPUT
           echo "$TAG_MESSAGE" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
