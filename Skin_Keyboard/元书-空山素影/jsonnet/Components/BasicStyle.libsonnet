@@ -196,7 +196,7 @@ local newSpaceButtonRimeSchemaForegroundStyle(isDark=false) =
     [spaceButtonRimeSchemaForegroundStyleName]: utils.newTextStyle({
       text: '$rimeSchemaName',
       fontSize: fonts.alternativeTextFontSize,
-      center: { x: 0.17, y: 0.2 },
+      center: settings.spaceButtonSchemaNameCenter,
       normalColor: colors.alternativeForegroundColor,
       highlightColor: colors.alternativeHighlightedForegroundColor,
     }, isDark),
@@ -309,6 +309,46 @@ local newFloatingKeyboardButton(name, isDark=false, params={}) =
       center: { y: 0.7 }
     } + params, isDark),
   };
+
+local toolbarSlideButtonsName = 'toolbarSlideButtons';
+local newToolbarSlideButtons(buttons, isDark=false) =
+  local rightToLeft = std.length(buttons) < settings.toolbarButtonsMaxCount;
+  {
+    [toolbarSlideButtonsName]: {
+      type: 'horizontalSymbols',
+      size: { width: '%d/%d' % [settings.toolbarButtonsMaxCount, settings.toolbarButtonsMaxCount + 2] },
+      maxColumns: settings.toolbarButtonsMaxCount,
+      contentRightToLeft: rightToLeft,
+      insets: { left: 3, right: 3 },
+      // backgroundStyle: 'toolbarcollectionCellBackgroundStyle',
+      dataSource: 'horizontalSymbolsToolbarButtonsDataSource',
+      // 用于定义符号列表中每个符号的样式(仅支持文本)
+      cellStyle: 'toolbarCollectionCellStyle',
+    },
+    horizontalSymbolsToolbarButtonsDataSource:
+      local adjustOrderButtons = if rightToLeft then std.reverse(buttons) else buttons;
+      [
+        {
+          label: button.name,
+          action: button.params.action,
+          styleName: button.name + 'Style',
+        } for button in adjustOrderButtons
+      ],
+    toolbarCollectionCellStyle: utils.newBackgroundStyle(style=keyboardBackgroundStyleName)
+      + utils.newForegroundStyle(style=keyboardBackgroundStyleName),
+  } +
+  std.foldl(
+    function(acc, button) acc + {
+      [button.name + 'Style']: utils.newForegroundStyle(style=button.name + 'ForegroundStyle'),
+      [button.name + 'ForegroundStyle']: utils.newSystemImageStyle({
+        normalColor: colors.toolbarButtonForegroundColor,
+        highlightColor: colors.toolbarButtonHighlightedForegroundColor,
+        fontSize: fonts.toolbarButtonImageFontSize,
+      } + button.params, isDark),
+    },
+    buttons,
+    {}
+  );
 
 local newToolbarButton(name, isDark=false, params={}) =
   {
@@ -649,6 +689,8 @@ local newCommitCandidateForegroundStyle(isDark=false, params={}) = {
   newImageSystemButtonForegroundStyle: newImageSystemButtonForegroundStyle,
 
   newFloatingKeyboardButton: newFloatingKeyboardButton,
+  toolbarSlideButtonsName: toolbarSlideButtonsName,
+  newToolbarSlideButtons: newToolbarSlideButtons,
   newToolbarButton: newToolbarButton,
 
   newAlphabeticButton: newAlphabeticButton,

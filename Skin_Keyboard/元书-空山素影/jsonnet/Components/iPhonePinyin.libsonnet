@@ -381,7 +381,7 @@ local newKeyLayout(isDark=false, isPortrait=true) =
     + basicStyle.newAsciiModeButtonForegroundStyle(isDark, params.keyboard.asciiModeButton.params)
     + basicStyle.newAsciiModeButtonEnglishStateForegroundStyle(isDark, params.keyboard.asciiModeButton.params)
     + basicStyle.newEnterButtonForegroundStyle(isDark, params.keyboard.enterButton.params)
-    + basicStyle.newCommitCandidateForegroundStyle(isDark, { text: '$rimeCandidate' })
+    + basicStyle.newCommitCandidateForegroundStyle(isDark, { text: settings.spaceButtonComposingText })
     // Notifications
     + basicStyle.rimeSchemaChangedNotification
     // + basicStyle.asciiModeChangedNotification // 这个通知要或不要，没有看出区别

@@ -1,5 +1,6 @@
 local colors = import '../Constants/Colors.libsonnet';
 local keyboardParams = import '../Constants/Keyboard.libsonnet';
+local settings = import '../Constants/Settings.libsonnet';
 local basicStyle = import 'BasicStyle.libsonnet';
 local utils = import 'Utils.libsonnet';
 
@@ -197,83 +198,42 @@ local newVerticalCandidateBackspaceButtonStyle(isDark) = {
     ),
 };
 
+// NOTE: 工具栏按钮列表，顺序与 settings.toolbarButtons 中的描述对应
+local toolbarButtonNames = [
+  keyboardParams.toolbarButton.toolbarPerformanceButton.name, // 查看性能
+  keyboardParams.toolbarButton.toolbarRimeSwitcherButton.name, // 切换方案
+  keyboardParams.toolbarButton.toolbarScriptButton.name, // 脚本
+  keyboardParams.toolbarButton.toolbarPhraseButton.name, // 常用语
+  keyboardParams.toolbarButton.toolbarClipboardButton.name, // 剪贴板
+  keyboardParams.toolbarButton.toolbarCheckUpdateButton.name, // 应用商店中检查元书更新
+  keyboardParams.toolbarButton.toolbarFeedbackButton.name, // 声音和震动
+  keyboardParams.toolbarButton.toolbarFinderButton.name, // 打开元书文件管理器
+  keyboardParams.toolbarButton.toolbarSkinButton.name, // 皮肤
+  keyboardParams.toolbarButton.toolbarUploadButton.name, // WIFI 文件传输
+  keyboardParams.toolbarButton.toolbarDeployButton.name, // Rime部署
+  keyboardParams.toolbarButton.toolbarToggleEmbeddedButton.name, // 内嵌开关
+  keyboardParams.toolbarButton.toolbarLeftHandButton.name, // 左手模式
+  keyboardParams.toolbarButton.toolbarRightHandButton.name, // 右手模式
+];
 
-local toolbarKeyboard = {
-  toolbarMenuButton: {
-    name: 'toolbarMenuButton',
-    params: {
-      action: { floatKeyboardType: 'panel', },
-      systemImageName: 'swirl.circle.righthalf.filled',
-    },
-  },
-  toolbarDismissButton: {
-    name: 'toolbarDismissButton',
-    params: {
-      action: 'dismissKeyboard',
-      systemImageName: 'chevron.down',
-    },
-  },
-  toolbarPerformanceButton: {
-    name: 'toolbarPerformanceButton',
-    params: {
-      action: { shortcut: '#keyboardPerformance' },
-      systemImageName: 'speedometer',
-    },
-  },
-  toolbarPhraseButton: {
-    name: 'toolbarPhraseButton',
-    params: {
-      action: { shortcut: '#showPhraseView' },
-      systemImageName: 'heart',
-    },
-  },
-  toolbarScriptButton: {
-    name: 'toolbarScriptButton',
-    params: {
-      action: { shortcut: '#toggleScriptView' },
-      systemImageName: 'apple.terminal',
-    },
-  },
-  toolbarClipboardButton: {
-    name: 'toolbarClipboardButton',
-    params: {
-      action: { shortcut: '#showPasteboardView' },
-      systemImageName: 'clipboard',
-    },
-  },
-  toolbarRimeSwitcherButton: {
-    name: 'toolbarRimeSwitcherButton',
-    params: {
-      action: { shortcut: '#RimeSwitcher' },
-      systemImageName: 'switch.2',
-    },
-  },
-};
+local buttons = [
+  keyboardParams.toolbarButton[toolbarButtonNames[buttonCode - 1]]
+  for buttonCode in settings.toolbarButtons
+];
+
 
 local toolbarKeyboardLayout = [
   {
     HStack: {
       subviews: [
         {
-          Cell: toolbarKeyboard.toolbarMenuButton.name,
+          Cell: keyboardParams.toolbarButton.toolbarMenuButton.name,
         },
         {
-          Cell: toolbarKeyboard.toolbarPerformanceButton.name,
+          Cell: basicStyle.toolbarSlideButtonsName,
         },
         {
-          Cell: toolbarKeyboard.toolbarRimeSwitcherButton.name,
-        },
-        {
-          Cell: toolbarKeyboard.toolbarScriptButton.name,
-        },
-        {
-          Cell: toolbarKeyboard.toolbarPhraseButton.name,
-        },
-        {
-          Cell: toolbarKeyboard.toolbarClipboardButton.name,
-        },
-        {
-          Cell: toolbarKeyboard.toolbarDismissButton.name,
+          Cell: keyboardParams.toolbarButton.toolbarDismissButton.name,
         },
       ],
     },
@@ -282,39 +242,14 @@ local toolbarKeyboardLayout = [
 
 local newButtons(isDark=false) =
   basicStyle.newToolbarButton(
-    toolbarKeyboard.toolbarMenuButton.name,
+    keyboardParams.toolbarButton.toolbarMenuButton.name,
     isDark,
-    toolbarKeyboard.toolbarMenuButton.params,
+    keyboardParams.toolbarButton.toolbarMenuButton.params,
   )
   + basicStyle.newToolbarButton(
-    toolbarKeyboard.toolbarPerformanceButton.name,
+    keyboardParams.toolbarButton.toolbarDismissButton.name,
     isDark,
-    toolbarKeyboard.toolbarPerformanceButton.params,
-  )
-  + basicStyle.newToolbarButton(
-    toolbarKeyboard.toolbarRimeSwitcherButton.name,
-    isDark,
-    toolbarKeyboard.toolbarRimeSwitcherButton.params,
-  )
-  + basicStyle.newToolbarButton(
-    toolbarKeyboard.toolbarScriptButton.name,
-    isDark,
-    toolbarKeyboard.toolbarScriptButton.params,
-  )
-  + basicStyle.newToolbarButton(
-    toolbarKeyboard.toolbarPhraseButton.name,
-    isDark,
-    toolbarKeyboard.toolbarPhraseButton.params,
-  )
-  + basicStyle.newToolbarButton(
-    toolbarKeyboard.toolbarClipboardButton.name,
-    isDark,
-    toolbarKeyboard.toolbarClipboardButton.params,
-  )
-  + basicStyle.newToolbarButton(
-    toolbarKeyboard.toolbarDismissButton.name,
-    isDark,
-    toolbarKeyboard.toolbarDismissButton.params,
+    keyboardParams.toolbarButton.toolbarDismissButton.params,
   );
 
 
@@ -346,6 +281,7 @@ local newToolbar(isDark=false, params={}) =
     ],
   }
   + newButtons(isDark)
+  + basicStyle.newToolbarSlideButtons(buttons, isDark)
   + newHorizontalCandidatesCollectionView(isDark)
   + newExpandButton(isDark)
   + newVerticalCandidateCollectionStyle(isDark)

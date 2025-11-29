@@ -21,12 +21,12 @@ local chineseSymbolicOffset = {
 
 local getSymbol(symbol, useRimeEngine=false, alias='') =
   local label = if std.length(alias) == 0 then symbol else alias;
-  (
-    if useRimeEngine then
-      { label: label, action: { character: symbol } }
-    else
-      { label: label, action: { symbol: symbol } }
-  );
+  {
+    label: label,
+    action: {
+      [if useRimeEngine then 'character' else 'symbol']: symbol
+    },
+  };
 
 local symbolsName = 'symbols';
 local newSymbols(useRimeEngine=false) = {
