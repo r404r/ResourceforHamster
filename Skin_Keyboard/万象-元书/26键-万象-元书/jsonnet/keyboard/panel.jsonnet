@@ -92,25 +92,63 @@ local keyboard(theme, orientation) =
     '方案管理',
     theme
   ) +
+  createButton(
+    'TraditionalChinese',
+    { shortcut: '#简繁切换' },
+    'character.square.fill.zh', // icon
+    '繁简切换',  // name
+    theme
+  ) +
+  createButton(
+    'LeftHandMode',
+    { shortcut: '#左手模式' },
+    'keyboard.onehanded.left.fill', // icon
+    '左手键盘',  // name
+    theme
+  ) +
+  createButton(
+    'RightHandMode',
+    { shortcut: '#右手模式' },
+    'keyboard.onehanded.right.fill', // icon
+    '右手键盘',  // name
+    theme
+  ) +
+  createButton(
+    'KeyboardTheme',
+    { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSkins' },
+    'paintpalette.fill', // icon
+    '键盘皮肤',  // name
+    theme
+  ) +
   {
     keyboardLayout: [
       {
         HStack: {
           subviews: [
-            { Cell: 'KeyboardSettingsButton' },
-            { Cell: 'SwitcherButton' },
-            { Cell: 'FinderButton' },
-            { Cell: 'toogleEmbeddedButton' },
+            { Cell: 'KeyboardSettingsButton' }, // 键盘设置
+            { Cell: 'SwitcherButton' }, // 方案开关
+            { Cell: 'FinderButton' },   // 文件管理
+            { Cell: 'toogleEmbeddedButton' }, // 内嵌开关
           ],
         },
       },
       {
         HStack: {
           subviews: [
-            { Cell: 'DeployButton' },
-            { Cell: 'SyncButton' },
-            { Cell: 'ScriptButton' },
-            { Cell: 'InputSchemaButton' },
+            { Cell: 'DeployButton' },  // 重新部署
+            { Cell: 'SyncButton' },    // 同步开关
+            { Cell: 'ScriptButton' },  // 脚本管理
+            { Cell: 'InputSchemaButton' },  // 方案管理
+          ],
+        },
+      },
+      {
+        HStack: {
+          subviews: [
+            { Cell: 'TraditionalChineseButton' }, // 繁简切换
+            { Cell: 'LeftHandModeButton' },   // 左手模式
+            { Cell: 'RightHandModeButton' }, // 右手模式
+            { Cell: 'KeyboardThemeButton' }, // 键盘皮肤 
           ],
         },
       },
