@@ -161,8 +161,8 @@ local keyboard(theme, orientation) =
     ,
     // floatKeyboardAlpha: 0.7,
     keyboardStyle: {
-      insets: if orientation == 'portrait' then { top: 50, left: 24, bottom: 50, right: 24 }
-      else { top: 20, left: 24, bottom: 20, right: 24 },
+      insets: if orientation == 'portrait' then { top: 20, left: 24, bottom: 20, right: 24 }
+      else { top: 5, left: 24, bottom: 5, right: 24 },
       backgroundStyle: 'keyboardBackgroundStyle',
     },
     keyboardBackgroundStyle: {
