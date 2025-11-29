@@ -13,6 +13,8 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # Fetch all tags with their annotations
+          fetch-tags: true
 
       - name: Extract tag name and message
         id: tag
@@ -22,8 +24,16 @@ jobs:
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Tag name without prefix: $TAG_NAME"
           
+          # Debug: Check tag type and availability
+          echo "Checking tag: ${GITHUB_REF}"
+          git cat-file -t "${GITHUB_REF}" || echo "Tag object not found"
+          
           # Get tag message (annotation), excluding PGP signature
-          TAG_MESSAGE=$(git for-each-ref --format='%(contents:subject)%0a%(contents:body)' "${GITHUB_REF}" | sed '/^-----BEGIN PGP SIGNATURE-----$/,/^-----END PGP SIGNATURE-----$/d' | sed '/^$/d')
+          # Use git tag -l --format instead of for-each-ref for better compatibility
+          TAG_MESSAGE=$(git tag -l --format='%(contents:subject)%0a%(contents:body)' "release/${TAG_NAME}" | sed '/^-----BEGIN PGP SIGNATURE-----$/,/^-----END PGP SIGNATURE-----$/d' | sed '/^$/d')
+          
+          # Debug output
+          echo "Extracted tag message length: ${#TAG_MESSAGE}"
           
           # If tag message is empty, try to get commit message
           if [ -z "$TAG_MESSAGE" ]; then
