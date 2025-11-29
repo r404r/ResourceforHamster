@@ -14,13 +14,20 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Extract tag name
+      - name: Extract tag name and message
         id: tag
         run: |
           # Remove 'release/' prefix from tag
           TAG_NAME="${GITHUB_REF#refs/tags/release/}"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Tag name without prefix: $TAG_NAME"
+          
+          # Get tag message (annotation)
+          TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF#refs/tags/}")
+          echo "tag_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$TAG_MESSAGE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "Tag message: $TAG_MESSAGE"
 
       - name: Check and package 元书- directories
         id: yuanshu_dirs
@@ -186,6 +193,11 @@ jobs:
 
             ### 使用说明：
             下载 .cskin 文件后，在元书输入法中导入即可，或者在iOS中直接点击此文件，选择元书输入法打开
+            
+            ---
+            
+            ### 更新说明：
+            ${{ steps.tag.outputs.tag_message }}
             
           files: ${{ steps.all_files.outputs.files }}
           token: ${{ secrets.GITHUB_TOKEN }}
