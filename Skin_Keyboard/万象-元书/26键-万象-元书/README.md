@@ -1,8 +1,10 @@
 # 使用说明
 
 **详细使用说明请查看:**
-
 `https://github.com/BlackCCCat/ResourceforHamster/tree/main/Skin_Keyboard/万象-元书/README.md`
+
+**r404r修改版请查看：**
+`https://github.com/r404r/ResourceforHamster/blob/r404r/work/Skin_Keyboard/万象-元书/README.md`
 
 **注意事项**
 1. 建议和自定义配置(`https://github.com/BlackCCCat/ResourceforHamster/tree/main/Input_Method/万象拼音/Rime4Hamster`)一起使用，尤其是自定义按键部分
@@ -19,3 +21,9 @@
 请到ResourceforHamster(`https://github.com/BlackCCCat/ResourceforHamster`)获取可能的更新，或者通过[该快捷指令](https://www.icloud.com/shortcuts/c541ddb2a1614732b2c9fde38bb89be6)自动下载最新版本并导入到元书输入法中
 
 - `26键-万象-元书.cskin`（对应release中`26-wanxiang.cskin`）
+
+
+r404r修改版请到[release](https://github.com/r404r/ResourceforHamster/releases)页面获取。
+
+- 26keys-wanxiang-ys_vX.X.X.X.cskin
+
