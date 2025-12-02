@@ -42,7 +42,7 @@ local LayoutType = import '../custom/Custom.libsonnet';
     spaceRight: { action: { character: ',' } },
     // space: { action: { shortcut: '#次选上屏' } },
     // spaceSecond: { action: { shortcut: '#次选上屏' } },
-    backspace: { action: { shortcut: '#deleteText' } },
+    backspace: { action: { shortcut: '#重输' } },
     enter: { action: { shortcut: '#换行' } },
     shift: { action: { shortcut: '#简繁切换' } }, // 繁简转换
     // "symbol": {"action": { "character": "。" }, "label": {"text": "。"}},
