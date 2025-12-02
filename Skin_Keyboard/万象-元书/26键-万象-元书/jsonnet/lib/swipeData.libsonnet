@@ -70,12 +70,12 @@ local LayoutType = import '../custom/Custom.libsonnet';
     k: { action: { character: ';' }, label: { text: ';' } },
     l: { action: { character: "'" }, label: { text: "'" } },
     z: {
-      action: { sendKeys: 'vjt' },
+      action: { sendKeys: '/jt' },
       label: { systemImageName: 'arrowshape.up.circle.fill' },
       // center: { x: 0.5, y: 0.8 },  // 不同于其他按键的偏移，可这样设置，例如这里zxcvbnm的下划都在按键正下方
     },
     x: if LayoutType.with_functions_row then {
-      action: { sendKeys: 'vsj' },
+      action: { sendKeys: '/sj' },
       label: { systemImageName: 'clock.arrow.circlepath' },
       // center: { x: 0.5, y: 0.8 },
     } else {
@@ -84,7 +84,7 @@ local LayoutType = import '../custom/Custom.libsonnet';
       // center: { x: 0.5, y: 0.8 },
     },
     c: if LayoutType.with_functions_row then {
-      action: { sendKeys: 'rq' },
+      action: { sendKeys: '/rq' },
       label: { systemImageName: 'calendar' },
       // center: { x: 0.5, y: 0.8 },
     } else {
@@ -93,7 +93,7 @@ local LayoutType = import '../custom/Custom.libsonnet';
       // center: { x: 0.5, y: 0.8 },
     },
     v: if LayoutType.with_functions_row then {
-      action: { sendKeys: 'sj' },
+      action: { sendKeys: '/dt' },
       label: { systemImageName: 'clock.circle' },
       // center: { x: 0.5, y: 0.8 },
     } else {
@@ -102,7 +102,7 @@ local LayoutType = import '../custom/Custom.libsonnet';
       // center: { x: 0.5, y: 0.8 },
     },
     b: if LayoutType.with_functions_row then {
-      action: { sendKeys: 'vhb' },
+      action: { sendKeys: '/hb' },
       label: { systemImageName: 'chineseyuanrenminbisign.square.fill' },
       // center: { x: 0.5, y: 0.8 },
     } else {
@@ -111,7 +111,7 @@ local LayoutType = import '../custom/Custom.libsonnet';
       // center: { x: 0.5, y: 0.8 },
     },
     n:  if LayoutType.with_functions_row then {
-      action: { sendKeys: 'vrq' },
+      action: { sendKeys: '/rq' },
       label: { systemImageName: 'calendar.badge.exclamationmark' },
       // center: { x: 0.5, y: 0.8 },
     } else {
