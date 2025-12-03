@@ -13,7 +13,7 @@ local hintSymbolsStyles = import '../lib/hintSymbolsStyles.libsonnet';
 local swipeStyles = import '../lib/swipeStyle.libsonnet';
 
 local emoji_portrait = import 'emoji_portrait.jsonnet';
-local numeric_9_portrit = import 'numeric_9_portrait.jsonnet';
+local numeric_9_portrit = import 'numeric_9.jsonnet';
 
 // 123Button的划动前景
 local slideForeground = import '../lib/slideForeground.libsonnet';
@@ -829,7 +829,7 @@ local keyboard(theme) =
 {
   new(theme):
     // 先用竖屏的，后面的拼接后会覆盖
-    numeric_9_portrit.keyboard(theme) +
+    numeric_9_portrit.keyboard(theme, 'landscape') +
     emoji_portrait.new(theme) +
     keyboard(theme) +
     swipeStyles.getStyle('number', theme, swipe_up, swipe_down) +

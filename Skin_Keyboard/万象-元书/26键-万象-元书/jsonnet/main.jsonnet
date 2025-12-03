@@ -61,8 +61,7 @@ local config = {
 
 local pinyin = import 'keyboard/pinyin_26.jsonnet';
 local alphabetic = import 'keyboard/alphabetic_26.jsonnet';
-local numericPortrait = import 'keyboard/numeric_9_portrait.jsonnet';
-local numericLandscape = import 'keyboard/numeric_9_landscape.jsonnet';
+local numeric = import 'keyboard/numeric_9.jsonnet';
 local symbolic = import 'keyboard/symbolic_portrait.jsonnet';
 local emoji = import 'keyboard/emoji_portrait.jsonnet';
 local emojiLandscape = import 'keyboard/emoji_landscape.jsonnet';
@@ -81,18 +80,18 @@ local lightAlphabeticLandscape = alphabetic.new('light', 'landscape');
 local darkAlphabeticLandscape = alphabetic.new('dark', 'landscape');
 
 // 数字
-local lightNumericPortrait = numericPortrait.new('light');
-local darkNumericPortrait = numericPortrait.new('dark');
-local lightNumericLandscape = numericLandscape.new('light');
-local darkNumericLandscape = numericLandscape.new('dark');
+local lightNumericPortrait = numeric.new('light', 'portrait');
+local darkNumericPortrait = numeric.new('dark', 'portrait');
+local lightNumericLandscape = numeric.new('light', 'landscape');
+local darkNumericLandscape = numeric.new('dark', 'landscape');
 
 // 符号
-local lightSymbolicPortrait = symbolic.new('light');
-local darkSymbolicPortrait = symbolic.new('dark');
+local lightSymbolicPortrait = symbolic.new('light', 'portrait');
+local darkSymbolicPortrait = symbolic.new('dark', 'landscape');
 
 // emoji
-local lightEmojiPortrait = emoji.new('light');
-local darkEmojiPortrait = emoji.new('dark');
+local lightEmojiPortrait = emoji.new('light', 'portrait');
+local darkEmojiPortrait = emoji.new('dark', 'portrait');
 local lightEmojiLandscape = emojiLandscape.new('light');
 local darkEmojiLandscape = emojiLandscape.new('dark');
 
@@ -122,7 +121,7 @@ local darkPanelLandscape = panel.new('dark', 'landscape');
   'light/numeric_9_landscape.yaml': std.toString(lightNumericLandscape),
   'dark/numeric_9_landscape.yaml': std.toString(darkNumericLandscape),
 
-  // 符号
+// 符号
   'light/symbolic_portrait.yaml': std.toString(lightSymbolicPortrait),
   'dark/symbolic_portrait.yaml': std.toString(darkSymbolicPortrait),
 

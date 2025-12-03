@@ -327,6 +327,6 @@ local keyboard(theme) =
     },
   };
 {
-  new(theme): keyboard(theme) + collectionData.symbolicDataSource,  // 符号数据源
+  new(theme, orientation='portrait'): keyboard(theme) + collectionData.symbolicDataSource,  // 符号数据源
   getKeyboard(theme): keyboard(theme),  // 给emoji键盘使用，提供无符号数据源的键盘配置
 }

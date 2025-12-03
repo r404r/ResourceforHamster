@@ -6,6 +6,6 @@ local keyboard(theme) =
 
 
 {
-  new(theme):
+  new(theme, orientation='portrait'):
     keyboard(theme) + collectionData.emojiDataSource,
 }
