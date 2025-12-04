@@ -7,7 +7,7 @@ local getToolBar(theme) =
 
   {
     preeditStyle: {
-      insets: { left: 8 },
+      insets: { left: 8 ,top: 2},
       // backgroundStyle: 'toolbarBackgroundStyle',
       foregroundStyle: 'preeditForegroundStyle',
     },
@@ -115,7 +115,7 @@ local getToolBar(theme) =
 
     // 横向候选文字栏调式
     horizontalCandidatesStyle: {
-      insets: { left: 5 },
+      insets: { left: 5 , top: 3},
       backgroundStyle: 'toolbarBackgroundStyle',
     },
     horizontalCandidatesLayout: [
@@ -299,7 +299,7 @@ local getToolBar(theme) =
 
     toolbarButtonOpenAppForegroundStyle: {
       buttonStyleType: 'systemImage',
-      systemImageName: 'bubbles.and.sparkles.fill',
+      systemImageName: 'swirl.circle.righthalf.filled',
       normalColor: color[theme]['toolbar按键颜色'],
       highlightColor: color[theme]['toolbar按键颜色'],
       fontSize: fontSize['toolbar按键前景sf符号大小'],

@@ -1,9 +1,12 @@
+local LayoutType = import '../lib/funcButtonRowSelector.libsonnet';
+local keyboardLayout_ = if LayoutType.with_functions_row then import '../lib/keyboardLayout.libsonnet' else import '../lib/keyboardLayoutWithoutFuncrow.libsonnet';
+
+
 local animation = import '../lib/animation.libsonnet';
 local center = import '../lib/center.libsonnet';
 local color = import '../lib/color.libsonnet';
 local fontSize = import '../lib/fontSize.libsonnet';
 local hintSymbolsData = import '../lib/hintSymbolsData.libsonnet';
-local keyboardLayout_ = import '../lib/keyboardLayout.libsonnet';
 local others = import '../lib/others.libsonnet';
 local swipeData = import '../lib/swipeData-en.libsonnet';
 local toolbar = import '../lib/toolbar-en.libsonnet';
@@ -217,7 +220,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     qButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'qButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'qButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'qButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'qButtonSwipeDownHintForegroundStyle',
     },
 
     wButton: createButton(
@@ -233,7 +237,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     wButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'wButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'wButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'wButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'wButtonSwipeDownHintForegroundStyle',
     },
     eButton: createButton(
       'e',
@@ -248,7 +253,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     eButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'eButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'eButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'eButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'eButtonSwipeDownHintForegroundStyle',
     },
 
     rButton: createButton(
@@ -264,7 +270,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     rButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'rButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'rButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'rButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'rButtonSwipeDownHintForegroundStyle',
     },
 
     tButton: createButton(
@@ -283,7 +290,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     tButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'tButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'tButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'tButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'tButtonSwipeDownHintForegroundStyle',
     },
 
     yButton: createButton(
@@ -301,7 +309,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     yButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'yButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'yButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'yButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'yButtonSwipeDownHintForegroundStyle',
     },
 
     uButton: createButton(
@@ -317,7 +326,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     uButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'uButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'uButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'uButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'uButtonSwipeDownHintForegroundStyle',
     },
 
     iButton: createButton(
@@ -333,7 +343,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     iButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'iButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'iButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'iButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'iButtonSwipeDownHintForegroundStyle',
     },
 
 
@@ -350,7 +361,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     oButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'oButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'oButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'oButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'oButtonSwipeDownHintForegroundStyle',
     },
 
     pButton: createButton(
@@ -366,7 +378,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     pButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'pButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'pButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'pButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'pButtonSwipeDownHintForegroundStyle',
     },
 
     aButton: createButton(
@@ -385,7 +398,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     aButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'aButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'aButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'aButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'aButtonSwipeDownHintForegroundStyle',
     },
 
     sButton: createButton(
@@ -402,7 +416,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     sButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'sButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'sButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'sButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'sButtonSwipeDownHintForegroundStyle',
     },
     dButton: createButton(
       'd',
@@ -417,7 +432,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     dButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'dButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'dButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'dButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'dButtonSwipeDownHintForegroundStyle',
     },
 
     fButton: createButton(
@@ -433,7 +449,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     fButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'fButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'fButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'fButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'fButtonSwipeDownHintForegroundStyle',
     },
 
     gButton: createButton(
@@ -449,7 +466,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     gButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'gButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'gButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'gButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'gButtonSwipeDownHintForegroundStyle',
     },
 
     hButton: createButton(
@@ -465,7 +483,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     hButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'hButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'hButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'hButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'hButtonSwipeDownHintForegroundStyle',
     },
 
     jButton: createButton(
@@ -481,7 +500,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     jButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'jButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'jButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'jButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'jButtonSwipeDownHintForegroundStyle',
     },
 
     kButton: createButton(
@@ -497,7 +517,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     kButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'kButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'kButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'kButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'kButtonSwipeDownHintForegroundStyle',
     },
 
     lButton: createButton(
@@ -516,7 +537,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     lButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'lButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'lButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'lButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'lButtonSwipeDownHintForegroundStyle',
     },
 
     shiftButton: createButton(
@@ -572,7 +594,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     zButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'zButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'zButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'zButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'zButtonSwipeDownHintForegroundStyle',
     },
 
     xButton: createButton(
@@ -588,7 +611,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     xButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'xButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'xButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'xButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'xButtonSwipeDownHintForegroundStyle',
     },
 
     cButton: createButton(
@@ -604,7 +628,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     cButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'cButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'cButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'cButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'cButtonSwipeDownHintForegroundStyle',
     },
 
     vButton: createButton(
@@ -620,7 +645,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     vButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'vButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'vButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'vButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'vButtonSwipeDownHintForegroundStyle',
     },
 
     bButton: createButton(
@@ -636,7 +662,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     bButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'bButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'bButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'bButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'bButtonSwipeDownHintForegroundStyle',
     },
 
     nButton: createButton(
@@ -652,7 +679,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     nButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'nButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'nButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'nButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'nButtonSwipeDownHintForegroundStyle',
     },
 
     mButton: createButton(
@@ -668,7 +696,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     mButtonHintStyle: {
       backgroundStyle: 'alphabeticHintBackgroundStyle',
       foregroundStyle: 'mButtonHintForegroundStyle',
-      // swipeUpForegroundStyle: 'mButtonSwipeUpHintForegroundStyle',
+      swipeUpForegroundStyle: 'mButtonSwipeUpHintForegroundStyle',
+      swipeDownForegroundStyle: 'mButtonSwipeDownHintForegroundStyle',
     },
     backspaceButton: createButton(
       'backspace',
@@ -737,7 +766,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     '123ButtonSymbolsDataSource': [
       { label: '1', action: { keyboardType: 'numeric' }, styleName: 'numericStyle' },
       { label: '2', action: { keyboardType: 'symbolic' }, styleName: 'symbolicStyle' },
-      { label: '3', action: { keyboardType: 'emoji' }, styleName: 'emojiStyle' },
+      // { label: '3', action: { keyboardType: 'emoji' }, styleName: 'emojiStyle' },
       { label: '4', action: { keyboardType: 'emojis' }, styleName: 'emojisStyle' },
     ],
 
