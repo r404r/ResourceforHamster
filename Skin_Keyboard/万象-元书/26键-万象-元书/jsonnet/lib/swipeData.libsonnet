@@ -11,16 +11,16 @@ local LayoutType = import '../custom/Custom.libsonnet';
   */
 
   swipe_up: {
-    q: { action: { character: '1' }, label: { text: '1' } },  // action同仓皮肤定义，label可选text/systemImageName, 具体见仓皮肤文档，若不想显示，可设置为text: ""
-    w: { action: { character: '2' }, label: { text: '2' } },
-    e: { action: { character: '3' }, label: { text: '3' } },
-    r: { action: { character: '4' }, label: { text: '4' } },
-    t: { action: { character: '5' }, label: { text: '5' } },
-    y: { action: { character: '6' }, label: { text: '6' } },
-    u: { action: { character: '7' }, label: { text: '7' } },
-    i: { action: { character: '8' }, label: { text: '8' } },
-    o: { action: { character: '9' }, label: { text: '9' } },
-    p: { action: { character: '0' }, label: { text: '0' } },
+    q: { action: { character: '~' }, label: { text: '~' } },
+    w: { action: { character: '@' }, label: { text: '@' } },
+    e: { action: { character: '#' }, label: { text: '#' } },
+    r: { action: { character: '$' }, label: { text: '$' } },
+    t: { action: { character: '%' }, label: { text: '%' } },
+    y: { action: { character: '^' }, label: { text: '^' } },
+    u: { action: { character: '&' }, label: { text: '&' } },
+    i: { action: { character: '*' }, label: { text: '*' } },
+    o: { action: { character: '(' }, label: { text: '(' } },
+    p: { action: { character: ')' }, label: { text: ')' } },
     a: { action: { character: '、' }, label: { text: '、' } },
     s: { action: { character: '-' }, label: { text: '-' } },
     d: { action: { character: '=' }, label: { text: '=' } },
@@ -50,16 +50,16 @@ local LayoutType = import '../custom/Custom.libsonnet';
 
   },
   swipe_down: {
-    q: { action: { character: '~' }, label: { text: '~' } },
-    w: { action: { character: '@' }, label: { text: '@' } },
-    e: { action: { character: '#' }, label: { text: '#' } },
-    r: { action: { character: '$' }, label: { text: '$' } },
-    t: { action: { character: '%' }, label: { text: '%' } },
-    y: { action: { character: '^' }, label: { text: '^' } },
-    u: { action: { character: '&' }, label: { text: '&' } },
-    i: { action: { character: '*' }, label: { text: '*' } },
-    o: { action: { character: '(' }, label: { text: '(' } },
-    p: { action: { character: ')' }, label: { text: ')' } },
+    q: { action: { character: '1' }, label: { text: '1' } },  // action同仓皮肤定义，label可选text/systemImageName, 具体见仓皮肤文档，若不想显示，可设置为text: ""
+    w: { action: { character: '2' }, label: { text: '2' } },
+    e: { action: { character: '3' }, label: { text: '3' } },
+    r: { action: { character: '4' }, label: { text: '4' } },
+    t: { action: { character: '5' }, label: { text: '5' } },
+    y: { action: { character: '6' }, label: { text: '6' } },
+    u: { action: { character: '7' }, label: { text: '7' } },
+    i: { action: { character: '8' }, label: { text: '8' } },
+    o: { action: { character: '9' }, label: { text: '9' } },
+    p: { action: { character: '0' }, label: { text: '0' } },
     a: { action: { character: '`' }, label: { text: '`' } },
     s: { action: { character: '_' }, label: { text: '_' } },
     d: { action: { character: '+' }, label: { text: '+' } },
@@ -70,7 +70,7 @@ local LayoutType = import '../custom/Custom.libsonnet';
     k: { action: { character: ';' }, label: { text: ';' } },
     l: { action: { character: "'" }, label: { text: "'" } },
     z: {
-      action: { sendKeys: 'vjt' }, // 箭头符号
+      action: { sendKeys: '/jt' }, // 箭头符号
       label: { systemImageName: 'av.remote.fill' },
       // center: { x: 0.5, y: 0.8 },  // 不同于其他按键的偏移，可这样设置，例如这里zxcvbnm的下划都在按键正下方
     },
