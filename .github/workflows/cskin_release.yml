@@ -1,0 +1,228 @@
+name: CSkin Release
+
+on:
+  push:
+    tags:
+      - 'release/**'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Fetch all tags with their annotations
+          fetch-tags: true
+
+      - name: Extract tag name and message
+        id: tag
+        run: |
+          # Remove 'release/' prefix from tag
+          TAG_NAME="${GITHUB_REF#refs/tags/release/}"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "Tag name without prefix: $TAG_NAME"
+          
+          # Debug: Check tag type and availability
+          echo "Checking tag: ${GITHUB_REF}"
+          git cat-file -t "${GITHUB_REF}" || echo "Tag object not found"
+          
+          # Get tag message (annotation), excluding PGP signature
+          # Use git tag -l --format instead of for-each-ref for better compatibility
+          TAG_MESSAGE=$(git tag -l --format='%(contents:subject)%0a%(contents:body)' "release/${TAG_NAME}" | sed '/^-----BEGIN PGP SIGNATURE-----$/,/^-----END PGP SIGNATURE-----$/d' | sed '/^$/d')
+          
+          # Debug output
+          echo "Extracted tag message length: ${#TAG_MESSAGE}"
+          
+          # If tag message is empty, try to get commit message
+          if [ -z "$TAG_MESSAGE" ]; then
+            echo "No tag annotation found, using commit message"
+            TAG_MESSAGE=$(git log -1 --pretty=format:%s "${GITHUB_REF}")
+          fi
+          
+          echo "tag_message<<EOF" >> $GITHUB_OUTPUT
+          echo "$TAG_MESSAGE" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          echo "Tag message: $TAG_MESSAGE"
+
+      - name: Check and package 元书- directories
+        id: yuanshu_dirs
+        run: |
+          # Set UTF-8 locale to handle Chinese characters properly
+          export LANG=C.UTF-8
+          export LC_ALL=C.UTF-8
+          
+          # Get the current commit (the one the tag points to)
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+          echo "Current commit: $CURRENT_COMMIT"
+          echo "Checking for updates in the last 5 commits from HEAD"
+          
+          PACKAGED_FILES=""
+          
+          # Find all directories starting with "元书-" in Skin_Keyboard
+          for dir in Skin_Keyboard/元书-*; do
+            if [ -d "$dir" ]; then
+              echo "Checking directory: $dir"
+              
+              # Debug: Show recent commits in this directory
+              echo "Recent commits (last 5) in $dir:"
+              git log -5 --pretty=format:"%H %ai %s" -- "$dir" || echo "No commits found"
+              echo ""
+              
+              # Check if there are any commits in the last 5 commits from HEAD in this directory
+              COMMITS_RECENT=$(git log -5 --pretty=format:"%H" -- "$dir" | wc -l)
+              
+              if [ "$COMMITS_RECENT" -gt 0 ]; then
+                echo "Found $COMMITS_RECENT recent commits in $dir"
+                
+                # Get directory name without path
+                DIR_NAME=$(basename "$dir")
+                
+                # Create zip file (exclude macOS metadata files)
+                cd Skin_Keyboard
+                zip -r "${DIR_NAME}.zip" "${DIR_NAME}" -x "*.DS_Store" -x "__MACOSX" -x "._*"
+                
+                # Rename to .cskin with tag name
+                mv "${DIR_NAME}.zip" "${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+                
+                # Remove any macOS metadata files that might have been created
+                rm -f "._${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+                
+                # Add to list of packaged files
+                if [ -z "$PACKAGED_FILES" ]; then
+                  PACKAGED_FILES="Skin_Keyboard/${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+                else
+                  PACKAGED_FILES="$PACKAGED_FILES
+          Skin_Keyboard/${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+                fi
+                
+                cd ..
+                echo "Packaged: ${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
+              else
+                echo "No recent commits in $dir, skipping"
+              fi
+            fi
+          done
+          
+          # Save packaged files list
+          echo "packaged_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$PACKAGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Check and package 26键-万象-元书 directory
+        id: wanxiang_dir
+        run: |
+          # Set UTF-8 locale to handle Chinese characters properly
+          export LANG=C.UTF-8
+          export LC_ALL=C.UTF-8
+          
+          CURRENT_COMMIT=$(git rev-parse HEAD)
+          echo "Current commit: $CURRENT_COMMIT"
+          echo "Checking for updates in the last 5 commits from HEAD"
+          TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
+          
+          PACKAGED_FILES=""
+          
+          if [ -d "$TARGET_DIR" ]; then
+            echo "Checking directory: $TARGET_DIR"
+            
+            # Debug: Show recent commits in this directory
+            echo "Recent commits (last 5) in $TARGET_DIR:"
+            git log -5 --pretty=format:"%H %ai %s" -- "$TARGET_DIR" || echo "No commits found"
+            echo ""
+            
+            # Check if there are any commits in the last 5 commits from HEAD in this directory
+            COMMITS_RECENT=$(git log -5 --pretty=format:"%H" -- "$TARGET_DIR" | wc -l)
+            
+            if [ "$COMMITS_RECENT" -gt 0 ]; then
+              echo "Found $COMMITS_RECENT recent commits in $TARGET_DIR"
+              
+              # Create zip file (exclude macOS metadata files)
+              cd Skin_Keyboard/万象-元书
+              zip -r "26keys-wanxiang-ys.zip" "26键-万象-元书" -x "*.DS_Store" -x "__MACOSX" -x "._*"
+              
+              # Rename to .cskin with tag name
+              mv "26keys-wanxiang-ys.zip" "26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
+              
+              # Remove any macOS metadata files that might have been created
+              rm -f "._26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
+              
+              PACKAGED_FILES="Skin_Keyboard/万象-元书/26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
+              
+              cd ../..
+              echo "Packaged: 26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
+            else
+              echo "No recent commits in $TARGET_DIR, skipping"
+            fi
+          else
+            echo "Directory $TARGET_DIR does not exist"
+          fi
+          
+          # Save packaged files list
+          echo "packaged_files<<EOF" >> $GITHUB_OUTPUT
+          echo "$PACKAGED_FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Combine packaged files list
+        id: all_files
+        run: |
+          FILES="${{ steps.yuanshu_dirs.outputs.packaged_files }}
+          ${{ steps.wanxiang_dir.outputs.packaged_files }}"
+          
+          # Remove empty lines
+          FILES=$(echo "$FILES" | sed '/^$/d')
+          
+          # Clean up any macOS metadata files in the workspace
+          echo "Searching for metadata files to clean up..."
+          find . -name "._*" -type f
+          find . -name "._*.cskin" -type f -delete
+          
+          # List all .cskin files to verify
+          echo "All .cskin files in workspace:"
+          find . -name "*.cskin" -type f
+          
+          echo "All packaged files:"
+          echo "$FILES"
+          
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+          
+          # Save build date
+          BUILD_DATE=$(date -u +%Y-%m-%d)
+          echo "build_date=$BUILD_DATE" >> $GITHUB_OUTPUT
+          echo "Build date: $BUILD_DATE"
+
+      - name: Create Release
+        if: steps.all_files.outputs.files != ''
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ steps.tag.outputs.tag_name }}
+          body: |
+            ## 元书 皮肤包发布
+
+            构建日期： ${{ steps.all_files.outputs.build_date }}
+            
+            ### 包含文件：
+            ${{ steps.all_files.outputs.files }}
+
+            ### 使用说明：
+            下载 .cskin 文件后，在元书输入法中导入即可，或者在iOS中直接点击此文件，选择元书输入法打开
+            
+            ---
+            
+            ### 更新说明：
+            ${{ steps.tag.outputs.tag_message }}
+            
+          files: ${{ steps.all_files.outputs.files }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: No files to release
+        if: steps.all_files.outputs.files == ''
+        run: |
+          echo "No directories with today's updates found. No release created."
+          exit 0
