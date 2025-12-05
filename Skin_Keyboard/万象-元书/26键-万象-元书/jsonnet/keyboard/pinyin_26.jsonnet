@@ -1,5 +1,5 @@
-local LayoutType = import '../lib/funcButtonRowSelector.libsonnet';
-local keyboardLayout_ = if LayoutType.with_functions_row then import '../lib/keyboardLayout.libsonnet' else import '../lib/keyboardLayoutWithoutFuncrow.libsonnet';
+local LayoutType = import '../custom/Custom.libsonnet';
+local keyboardLayout_ = if LayoutType.with_functions_row then import '../lib/keyboardLayout.libsonnet' else import '../lib/keyboardLayoutWithoutFuncRow.libsonnet';
 
 local animation = import '../lib/animation.libsonnet';
 local center = import '../lib/center.libsonnet';
@@ -17,6 +17,9 @@ local swipeStyles = import '../lib/swipeStyle.libsonnet';
 // 123Button的划动前景
 local slideForeground = import '../lib/slideForeground.libsonnet';
 
+// 功能按键引入
+local functions = import '../lib/functionButton.libsonnet';
+
 // 上下和下划的数据
 local swipe_up = if std.objectHas(swipeData, 'swipe_up') then swipeData.swipe_up else {};
 local swipe_down = if std.objectHas(swipeData, 'swipe_down') then swipeData.swipe_down else {};
@@ -31,8 +34,12 @@ local createButton(key, size, bounds, root, isUpper=true) = {
     function(x) x != null,
     [
       key + 'ButtonForegroundStyle',
-      if std.objectHas(swipe_up, key) then key + 'ButtonUpForegroundStyle' else null,
-      if std.objectHas(swipe_down, key) then key + 'ButtonDownForegroundStyle' else null,
+      if LayoutType.show_swipe then
+        if std.objectHas(swipe_up, key) then key + 'ButtonUpForegroundStyle' else null
+      else null,
+      if LayoutType.show_swipe then
+        if std.objectHas(swipe_down, key) then key + 'ButtonDownForegroundStyle' else null
+      else null,
     ]
   ),
   [if isUpper then 'uppercasedStateForegroundStyle']: std.filter(
@@ -73,6 +80,7 @@ local createBackslashNotification(key, bounds={}) = {
   notificationKeyboardAction: { sendKeys: 'backslash' },
 };
 
+
 // 26个按键前景批量生成
 
 
@@ -84,222 +92,12 @@ local keyboard(theme, orientation, keyboardLayout) =
   utils.genPinyinStyles(fontSize, color, theme, center) +
   utils.genFuncKeyStyles(fontSize, color, theme, center) +
   slideForeground.slideForeground(theme) +
+  functions.makeFunctionButtons(orientation, keyboardLayout, 'pinyin') +
   {
-    [if std.objectHas(others, '中文键盘方案') then 'rimeSchema']: others['中文键盘方案'],
     preeditHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['preedit高度'],
     toolbarHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['toolbar高度'],
     keyboardHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['keyboard高度'],
-    preedit: {
-      insets: {
-        left: 8,
-        top: 2,
-      },
-      backgroundStyle: 'preeditBackgroundStyle',
-      foregroundStyle: 'preeditForegroundStyle',
-    },
-    preeditBackgroundStyle: {
-      buttonStyleType: 'geometry',
-      normalColor: color[theme]['键盘背景颜色'],
-    },
-    preeditForegroundStyle: {
-      textColor: color[theme]['候选字体未选中字体颜色'],
-      fontSize: fontSize['preedit区字体大小'],
-      fontWeight: 0,
-    },
 
-    leftButton: createButton(
-      'left',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: 'moveCursorBackward',
-      repeatAction: 'moveCursorBackward',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'leftButtonPreeditNotification',
-      ],
-    },
-    leftButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      foregroundStyle: 'leftButtonPreeditForegroundStyle',
-      action: { sendKeys: 'Up' },
-      swipeDownAction: { character: '[' },
-      repeatAction: { sendKeys: 'Up' },
-
-    },
-
-    headButton: createButton(
-      'head',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: { shortcut: '#行首' },
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'headButtonPreeditNotification',
-      ],
-    },
-    headButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      // 下面的前景样式重写以覆盖utils中生成的前景
-      foregroundStyle: 'headButtonPreeditForegroundStyle',
-      action: { shortcut: '#rimeNextPage' },
-      swipeUpAction: { shortcut: '#rimePreviousPage' },
-      swipeDownAction: { shortcut: '#rimeNextPage' },
-    },
-
-    selectButton: createButton(
-      'select',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: { shortcut: '#selectText' },
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'selectButtonPreeditNotification',
-      ],
-    },
-    selectButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      foregroundStyle: 'selectButtonPreeditForegroundStyle',
-      action: { character: '7' },
-      swipeDownAction: { sendKeys: 'control+1' },
-      swipeUpAction: { sendKeys: 'control+1' },
-    },
-    cutButton: createButton(
-      'cut',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: { shortcut: '#cut' },
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'cutButtonPreeditNotification',
-      ],
-    },
-    cutButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      foregroundStyle: 'cutButtonPreeditForegroundStyle',
-      action: { character: '8' },
-      swipeDownAction: { sendKeys: 'control+2' },
-      swipeUpAction: { sendKeys: 'control+2' },
-    },
-
-
-    copyButton: createButton(
-      'copy',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: { shortcut: '#copy' },
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'copyButtonPreeditNotification',
-      ],
-    },
-    copyButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      foregroundStyle: 'copyButtonPreeditForegroundStyle',
-      action: { character: '9' },
-      swipeDownAction: { sendKeys: 'control+3' },
-      swipeUpAction: { sendKeys: 'control+3' },
-    },
-
-    pasteButton: createButton(
-      'paste',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: { shortcut: '#paste' },
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'pasteButtonPreeditNotification',
-      ],
-    },
-    pasteButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      foregroundStyle: 'pasteButtonPreeditForegroundStyle',
-      action: { character: '0' },
-      swipeDownAction: { sendKeys: 'control+4' },
-      swipeUpAction: { sendKeys: 'control+4' },
-    },
-
-    tailButton: createButton(
-      'tail',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: { shortcut: '#行尾' },
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'tailButtonPreeditNotification',
-      ],
-    },
-    tailButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      foregroundStyle: 'tailButtonPreeditForegroundStyle',
-      action: { sendKeys: 'backslash' },
-    },
-
-    rightButton: createButton(
-      'right',
-      if orientation == 'portrait' then
-        keyboardLayout['竖屏按键尺寸']['自定义键size']
-      else
-        keyboardLayout['横屏按键尺寸']['自定义键size'],
-      {},
-      $
-    ) + {
-      action: 'moveCursorForward',
-      repeatAction: 'moveCursorForward',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      notification: [
-        'rightButtonPreeditNotification',
-      ],
-    },
-    rightButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'alphabeticBackgroundStyle',
-      foregroundStyle: 'rightButtonPreeditForegroundStyle',
-      action: { sendKeys: 'Down' },
-      swipeDownAction: { character: ']' },
-      repeatAction: { sendKeys: 'Down' },
-    },
 
     qButton: createButton(
       'q',
@@ -692,7 +490,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     },
     shiftButtonPreeditForegroundStyle: {
       buttonStyleType: 'systemImage',
-      systemImageName: 'inset.filled.lefthalf.arrow.left.rectangle',
+      systemImageName: if LayoutType.fix_sf_symbol then 'paragraphsign' else 'inset.filled.lefthalf.arrow.left.rectangle',
       normalColor: color[theme]['按键前景颜色'],
       highlightColor: color[theme]['按键前景颜色'],
       fontSize: fontSize['按键前景文字大小'],
@@ -964,12 +762,32 @@ local keyboard(theme, orientation, keyboardLayout) =
         },
       ],
     },
+    cn2enButtonHintSymbolsStyleOf10: super['cn2enButtonHintSymbolsStyleOf10'] + {
+      foregroundStyle: [
+        {
+          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf10',
+          conditionKey: 'rime$mixed',
+          conditionValue: 'true',
+        },
+        {
+          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf11',
+          conditionKey: 'rime$zh_only',
+          conditionValue: 'true',
+        },
+        {
+          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf12',
+          conditionKey: 'rime$en_only',
+          conditionValue: 'true',
+        },
+      ],
+    },
     cn2enButtonHintSymbolsStyle: super['cn2enButtonHintSymbolsStyle'] + {
       symbolStyles: [
         'cn2enButtonHintSymbolsStyleOf0',
         'cn2enButtonHintSymbolsStyleOf4',
         'cn2enButtonHintSymbolsStyleOf6',
         'cn2enButtonHintSymbolsStyleOf8',
+        'cn2enButtonHintSymbolsStyleOf10',
       ],
     },
 
@@ -1166,6 +984,7 @@ local keyboard(theme, orientation, keyboardLayout) =
       backgroundStyle: 'alphabeticBackgroundStyle',
       foregroundStyle: 'spaceRightButtonPreeditForegroundStyle',
       action: { sendKeys: 'Break' },
+      hintSymbolsStyle: 'cn2enButtonHintSymbolsStyle',  // 预编辑通知的长按菜单复用普通状态的长按菜单
     },
     spaceRightButtonPreeditForegroundStyle: {
       buttonStyleType: 'systemImage',

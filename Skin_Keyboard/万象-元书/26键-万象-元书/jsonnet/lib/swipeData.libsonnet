@@ -1,3 +1,5 @@
+local LayoutType = import '../custom/Custom.libsonnet';
+
 {
   /*
   说明:
@@ -73,38 +75,63 @@
       // center: { x: 0.5, y: 0.8 },  // 不同于其他按键的偏移，可这样设置，例如这里zxcvbnm的下划都在按键正下方
     },
     x: {
-      action: { sendKeys: 'vsj' }, // 
+      action: { sendKeys: '/sj' }, // 
       label: { systemImageName: 'clock.arrow.circlepath' },
       // center: { x: 0.5, y: 0.8 },
+    } else {
+      action: { shortcut: '#cut' },
+      label: { systemImageName: 'scissors' },
+      // center: { x: 0.5, y: 0.8 },
     },
-    c: {
-      action: { sendKeys: 'rq' }, // 日期快捷键
+    c: if LayoutType.with_functions_row then {
+      action: { sendKeys: '/rq' },
       label: { systemImageName: 'calendar' },
       // center: { x: 0.5, y: 0.8 },
+    } else {
+      action: { shortcut: '#copy' },
+      label: { systemImageName: 'arrow.up.doc.on.clipboard' },
+      // center: { x: 0.5, y: 0.8 },
     },
-    v: {
-      action: { sendKeys: 'sj' }, // 时间快捷键
+    v: if LayoutType.with_functions_row then {
+      action: { sendKeys: '/sj' },
       label: { systemImageName: 'clock.circle' },
       // center: { x: 0.5, y: 0.8 },
-    },
-    b: {
-      action: { sendKeys: 'vhb' }, // 货币符号
-      label: { systemImageName: 'chineseyuanrenminbisign.square.fill' },
+    } else {
+      action: { shortcut: '#paste' },
+      label: { systemImageName: 'doc.on.clipboard.fill' },
       // center: { x: 0.5, y: 0.8 },
     },
-    n: {
-      action: { sendKeys: 'vrq' }, // 日期符号
+    b: if LayoutType.with_functions_row then {
+      action: { sendKeys: '/hb' },
+      label: { systemImageName: if LayoutType.fix_sf_symbol then 'dollarsign.square.fill' else 'chineseyuanrenminbisign.square.fill' },
+      // center: { x: 0.5, y: 0.8 },
+    } else {
+      action: { shortcut: '#selectText' },
+      label: { systemImageName: 'selection.pin.in.out' },
+      // center: { x: 0.5, y: 0.8 },
+    },
+    n: if LayoutType.with_functions_row then {
+      action: { sendKeys: '/dt' },
       label: { systemImageName: 'calendar.badge.exclamationmark' },
       // center: { x: 0.5, y: 0.8 },
+    } else {
+      action: { shortcut: '#rimePreviousPage' },
+      label: { systemImageName: 'chevron.up' },
+      // center: { x: 0.5, y: 0.8 },
     },
-    m: {
+    m: if LayoutType.with_functions_row then {
       action: { character: '`' },
       label: { systemImageName: 'rectangle.3.group.fill' },
+      // center: { x: 0.5, y: 0.8 },
+    } else {
+      action: { shortcut: '#rimeNextPage' },
+      label: { systemImageName: 'chevron.down' },
       // center: { x: 0.5, y: 0.8 },
     },
     // '123': { action: { shortcut: '#方案切换' } },
     // space: { action: { shortcut: '#三选上屏' } },
     // spaceSecond: { action: { shortcut: '#三选上屏' } },
+    backspace: { action: { shortcut: '#undo' } },
   },
 
   // 中文九键划动

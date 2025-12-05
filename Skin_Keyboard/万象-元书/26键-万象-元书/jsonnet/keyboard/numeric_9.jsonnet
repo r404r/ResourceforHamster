@@ -1,9 +1,9 @@
-local LayoutType = import '../lib/funcButtonRowSelector.libsonnet';
+local LayoutType = import '../custom/Custom.libsonnet';
 local keyboardLayout_ = import '../lib/numericLayout.libsonnet';
 
-local chooseLayout(selector) = 
-  if selector then keyboardLayout_.portraitLayoutWithFunc
-  else keyboardLayout_.portraitLayoutWithoutFunc;
+local chooseLayout(selector) =
+  if selector then keyboardLayout_.LayoutWithFunc
+  else keyboardLayout_.LayoutWithoutFunc;
 
 
 local animation = import '../lib/animation.libsonnet';
@@ -14,7 +14,7 @@ local fontSize = import '../lib/fontSize.libsonnet';
 local hintSymbolsData = import '../lib/hintSymbolsData.libsonnet';
 local others = import '../lib/others.libsonnet';
 local swipeData = import '../lib/swipeData.libsonnet';
-local toolbar = import '../lib/toolbar-numeric.libsonnet';
+local toolbar = import '../lib/toolbar.libsonnet';
 local utils = import '../lib/utils.libsonnet';
 
 local hintSymbolsStyles = import '../lib/hintSymbolsStyles.libsonnet';
@@ -22,6 +22,9 @@ local swipeStyles = import '../lib/swipeStyle.libsonnet';
 
 // 123Button的划动前景
 local slideForeground = import '../lib/slideForeground.libsonnet';
+
+// 功能按键引入
+local functions = import '../lib/functionButton.libsonnet';
 
 // 上下和下划的数据
 local swipe_up = if std.objectHas(swipeData, 'number_swipe_up') then swipeData.number_swipe_up else {};
@@ -46,42 +49,25 @@ local createButton(key, size, bounds, root) = {
   [if std.objectHas(root, 'number' + key + 'ButtonHintSymbolsStyle') then 'hintSymbolsStyle']: 'number' + key + 'ButtonHintSymbolsStyle',
 };
 
-local keyboard(theme) =
+local keyboard(theme, orientation) =
   slideForeground.slideForeground(theme) +
   {
-    [if std.objectHas(others, '中文键盘方案') then 'rimeSchema']: others['中文键盘方案'],
-    preeditHeight: others['竖屏']['preedit高度'],
-    toolbarHeight: others['竖屏']['toolbar高度'],
-    keyboardHeight: others['竖屏']['keyboard高度'],
-    preedit: {
-      insets: {
-        left: 8,
-        top: 2,
-      },
-      backgroundStyle: 'preeditBackgroundStyle',
-      foregroundStyle: 'preeditForegroundStyle',
-    },
-    preeditBackgroundStyle: {
-      buttonStyleType: 'geometry',
-      normalColor: color[theme]['键盘背景颜色'],
-    },
-    preeditForegroundStyle: {
-      textColor: color[theme]['候选字体未选中字体颜色'],
-      fontSize: fontSize['preedit区字体大小'],
-      fontWeight: 0,
-    },
+    preeditHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['preedit高度'],
+    toolbarHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['toolbar高度'],
+    keyboardHeight: others[if orientation == 'portrait' then '竖屏' else '横屏']['keyboard高度'],
+
 
     keyboardLayout: chooseLayout(LayoutType.with_functions_row),
     rowofFunctionStyle: {
       size: {
-        height: {percentage: 0.17},
-          },
+        height: { percentage: if orientation == 'portrait' then 0.17 else 0.185 },
+      },
       backgroundStyle: 'keyboardBackgroundStyle',
     },
     keyboardStyle: {
       size: {
-            height: {percentage: 0.73},
-          },
+        height: { percentage: 0.73 },
+      },
       insets: {
         top: 3,
         bottom: 3,
@@ -145,7 +131,7 @@ local keyboard(theme) =
       'return', {}, {}, $
     ) + {
       backgroundStyle: 'systemButtonBackgroundStyle',
-      action: 'returnLastKeyboard',
+      action: 'returnPrimaryKeyboard',
     },
 
     returnButtonForegroundStyle: {
@@ -155,111 +141,6 @@ local keyboard(theme) =
       highlightColor: color[theme]['按键前景颜色'],
       fontSize: fontSize['按键前景文字大小'] - 3,
       // center: center['26键中文前景偏移'],
-    },
-
-    leftButton: createButton(
-      'left',
-      {},
-      {},
-      $
-    ) + {
-      action: 'moveCursorBackward',
-      repeatAction: 'moveCursorBackward',
-      swipeDownAction: { character: '[' },
-      backgroundStyle: 'functionBackgroundStyle',
-      notification: [
-        'leftButtonPreeditNotification',
-      ],
-    },
-    leftButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'functionBackgroundStyle',
-      foregroundStyle: 'leftButtonPreeditForegroundStyle',
-      action: { sendKeys: 'Up' },
-    },
-
-    headButton: createButton(
-      'head',
-      {},
-      {},
-      $
-    ) + {
-      action: { shortcut: '#行首' },
-      backgroundStyle: 'functionBackgroundStyle',
-    },
-
-
-    cutButton: createButton(
-      'cut',
-      {},
-      {},
-      $
-    ) + {
-      action: { shortcut: '#cut' },
-      backgroundStyle: 'functionBackgroundStyle',
-    },
-
-
-    copyButton: createButton(
-      'copy',
-      {},
-      {},
-      $
-    ) + {
-      action: { shortcut: '#copy' },
-      backgroundStyle: 'functionBackgroundStyle',
-    },
-
-    pasteButton: createButton(
-      'paste',
-      {},
-      {},
-      $
-    ) + {
-      action: { shortcut: '#paste' },
-      backgroundStyle: 'functionBackgroundStyle',
-    },
-
-    selectButton: createButton(
-      'select',
-      {},
-      {},
-      $
-    ) + {
-      action: { shortcut: '#selectText' },
-      backgroundStyle: 'functionBackgroundStyle',
-    },
-
-
-    tailButton: createButton(
-      'tail',
-      {},
-      {},
-      $
-    ) + {
-      action: { shortcut: '#行尾' },
-      backgroundStyle: 'functionBackgroundStyle',
-    },
-
-    rightButton: createButton(
-      'right',
-      {},
-      {},
-      $
-    ) + {
-      action: 'moveCursorForward',
-      repeatAction: 'moveCursorForward',
-      swipeDownAction: { character: ']' },
-      backgroundStyle: 'functionBackgroundStyle',
-      notification: [
-        'rightButtonPreeditNotification',
-      ],
-    },
-    rightButtonPreeditNotification: {
-      notificationType: 'preeditChanged',
-      backgroundStyle: 'functionBackgroundStyle',
-      foregroundStyle: 'rightButtonPreeditForegroundStyle',
-      action: { sendKeys: 'Down' },
     },
 
     number1Button: createButton(
@@ -339,6 +220,7 @@ local keyboard(theme) =
       action: 'backspace',
       repeatAction: 'backspace',
       swipeUpAction: { shortcut: '#deleteText' },
+      swipeDownAction: { shortcut: '#undo' },
     },
 
     backspaceButtonForegroundStyle: {
@@ -547,13 +429,14 @@ local keyboard(theme) =
     symbols: collectionData.numericSymbols,
   };
 {
-  new(theme):
-    keyboard(theme) +
+  new(theme, orientation):
+    keyboard(theme, orientation) +
     swipeStyles.getStyle('number', theme, swipe_up, swipe_down) +
     hintSymbolsStyles.getStyle(theme, hintSymbolsData.number) +
     toolbar.getToolBar(theme) +
     utils.genNumberStyles(fontSize, color, theme, center) +
-    utils.genFuncKeyStyles(fontSize, color, theme, center)
+    utils.genFuncKeyStyles(fontSize, color, theme, center) +
+    functions.makeFunctionButtons('', {}, 'numeric')
   ,
   // 导出keyboard给横屏用
   keyboard: keyboard,
