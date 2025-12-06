@@ -13,7 +13,7 @@ local hintSymbolsStyles = import '../lib/hintSymbolsStyles.libsonnet';
 local swipeStyles = import '../lib/swipeStyle.libsonnet';
 
 local emoji_portrait = import 'emoji_portrait.jsonnet';
-local numeric_9_portrit = import 'numeric_9_portrait.jsonnet';
+local numeric_9_portrit = import 'numeric_9.jsonnet';
 
 // 123Button的划动前景
 local slideForeground = import '../lib/slideForeground.libsonnet';
