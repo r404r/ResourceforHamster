@@ -121,7 +121,7 @@ local darkPanelLandscape = panel.new('dark', 'landscape');
   'light/numeric_9_landscape.yaml': std.toString(lightNumericLandscape),
   'dark/numeric_9_landscape.yaml': std.toString(darkNumericLandscape),
 
-// 符号
+  // 符号
   'light/symbolic_portrait.yaml': std.toString(lightSymbolicPortrait),
   'dark/symbolic_portrait.yaml': std.toString(darkSymbolicPortrait),
 
