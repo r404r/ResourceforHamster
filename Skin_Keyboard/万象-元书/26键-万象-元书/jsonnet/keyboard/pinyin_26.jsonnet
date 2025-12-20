@@ -484,13 +484,13 @@ local keyboard(theme, orientation, keyboardLayout) =
     shiftButtonPreeditNotification: {
       notificationType: 'preeditChanged',
       backgroundStyle: 'systemButtonBackgroundStyle',
-      // foregroundStyle: 'shiftButtonPreeditForegroundStyle',
+      foregroundStyle: 'shiftButtonPreeditForegroundStyle',
       action: 'shift',
       swipeUpAction: { character: "'" },
     },
     shiftButtonPreeditForegroundStyle: {
       buttonStyleType: 'systemImage',
-      systemImageName: if Settings.fix_sf_symbol then 'paragraphsign' else 'inset.filled.lefthalf.arrow.left.rectangle',
+      systemImageName: 'shift.fill', // if Settings.fix_sf_symbol then 'paragraphsign' else 'inset.filled.lefthalf.arrow.left.rectangle',
       normalColor: color[theme]['按键前景颜色'],
       highlightColor: color[theme]['按键前景颜色'],
       fontSize: fontSize['按键前景文字大小'],
