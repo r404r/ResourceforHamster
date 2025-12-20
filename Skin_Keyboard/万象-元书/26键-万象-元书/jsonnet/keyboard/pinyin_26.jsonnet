@@ -484,8 +484,8 @@ local keyboard(theme, orientation, keyboardLayout) =
     shiftButtonPreeditNotification: {
       notificationType: 'preeditChanged',
       backgroundStyle: 'systemButtonBackgroundStyle',
-      foregroundStyle: 'shiftButtonPreeditForegroundStyle',
-      action: { character: '/' },
+      // foregroundStyle: 'shiftButtonPreeditForegroundStyle',
+      action: 'shift',
       swipeUpAction: { character: "'" },
     },
     shiftButtonPreeditForegroundStyle: {
