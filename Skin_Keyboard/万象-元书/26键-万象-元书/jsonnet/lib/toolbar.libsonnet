@@ -61,11 +61,11 @@ local getToolBar(theme) =
     },
     horizontalSymbolsDataSource2: [
       { label: '0', action: { openURL: 'hamster3://' }, styleName: 'toolbarButtonOpenAppStyle' },
-      { label: '1', action: { shortcut: '#RimeSwitcher' }, styleName: 'toolbarButtonRimeSwitcherStyle' },
+      { label: '1', action: { shortcutCommand: '#toggleScriptView' }, styleName: 'toolbarButtonScriptStyle' },
       { label: '2', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSettings' }, styleName: 'toolbarButtonKeyboardSettingsStyle' },
       { label: '3', action: { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSkins' }, styleName: 'toolbarButtonKeyboardSkinsStyle' },
       { label: '4', action: { shortcut: '#keyboardPerformance' }, styleName: 'toolbarButtonKeyboardPerfomanceStyle' },
-      { label: '5', action: { shortcutCommand: '#toggleScriptView' }, styleName: 'toolbarButtonScriptStyle' },
+      { label: '5', action: { shortcut: '#RimeSwitcher' }, styleName: 'toolbarButtonRimeSwitcherStyle' },
       { label: '6', action: { shortcut: '#toggleEmbeddedInputMode' }, styleName: 'toolbarButtonEmbeddingToggleStyle' },
     ],
 
