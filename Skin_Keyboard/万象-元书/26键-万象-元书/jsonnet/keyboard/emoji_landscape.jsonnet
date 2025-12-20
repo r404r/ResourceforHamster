@@ -1,3 +1,4 @@
+local Settings = import '../custom/Custom.libsonnet';
 local animation = import '../lib/animation.libsonnet';
 local center = import '../lib/center.libsonnet';
 local collectionData = import '../lib/collectionData.libsonnet';
@@ -241,7 +242,7 @@ local keyboard(theme) =
       buttonStyleType: 'geometry',
       insets: { top: 3, left: 2, bottom: 3, right: 2 },  //{ top: 5, left: 3, bottom: 5, right: 3 },
       normalColor: color[theme]['符号键盘左侧collection背景颜色'],
-      cornerRadius: 7,
+      cornerRadius: Settings.cornerRadius,
       normalLowerEdgeColor: color[theme]['符号键盘左侧collection背景下边缘颜色'],
     },
 
@@ -254,7 +255,7 @@ local keyboard(theme) =
       insets: { top: 3, left: 2, bottom: 3, right: 2 },  //{ top: 6, left: 3, bottom: 6, right: 3 },
       highlightColor: 'ffffff',
       normalColor: 'ffffff00',
-      cornerRadius: 7,
+      cornerRadius: Settings.cornerRadius,
     },
     collectionCellForegroundStyle: {
       buttonStyleType: 'text',
@@ -620,7 +621,7 @@ local keyboard(theme) =
       insets: { top: 3, left: 2, bottom: 3, right: 2 },
       normalColor: color[theme]['enter键背景(蓝色)'],
       highlightColor: color[theme]['功能键背景颜色-高亮'],
-      cornerRadius: 7,
+      cornerRadius: Settings.cornerRadius,
       normalLowerEdgeColor: color[theme]['底边缘颜色-普通'],
       highlightLowerEdgeColor: color[theme]['底边缘颜色-高亮'],
     },
@@ -630,7 +631,7 @@ local keyboard(theme) =
       insets: { top: 3, left: 2, bottom: 3, right: 2 },  //{ top: 4, left: 3, bottom: 4, right: 3 },
       normalColor: color[theme]['字母键背景颜色-普通'],
       highlightColor: color[theme]['字母键背景颜色-高亮'],
-      cornerRadius: 7,
+      cornerRadius: Settings.cornerRadius,
       normalLowerEdgeColor: color[theme]['底边缘颜色-普通'],
       highlightLowerEdgeColor: color[theme]['底边缘颜色-高亮'],
     },
@@ -648,7 +649,7 @@ local keyboard(theme) =
       insets: { top: 3, left: 2, bottom: 3, right: 2 },  //{ top: 4, left: 3, bottom: 4, right: 3 },
       normalColor: color[theme]['功能键背景颜色-普通'],
       highlightColor: color[theme]['功能键背景颜色-高亮'],
-      cornerRadius: 7,
+      cornerRadius: Settings.cornerRadius,
       normalLowerEdgeColor: color[theme]['底边缘颜色-普通'],
       highlightLowerEdgeColor: color[theme]['底边缘颜色-高亮'],
     },
@@ -680,7 +681,7 @@ local keyboard(theme) =
       insets: { top: 3, left: 2, bottom: 3, right: 2 },  //{ top: 4, bottom: 4, left: 5, right: 5 },
       normalColor: '00000000',
       highlightColor: color[theme]['字母键背景颜色-普通'],
-      cornerRadius: 7,
+      cornerRadius: Settings.cornerRadius,
     },
     symbolcollectionCellForegroundStyle: {
       buttonStyleType: 'text',
@@ -702,7 +703,7 @@ local keyboard(theme) =
       buttonStyleType: 'geometry',
       insets: { top: 3, left: 2, bottom: 3, right: 2 },  //{ top: 5, left: 5, bottom: 5, right: 5 },
       normalColor: color[theme]['符号键盘右侧collection背景颜色'],
-      cornerRadius: 12,
+      cornerRadius: Settings.cornerRadius,
       normalLowerEdgeColor: color[theme]['符号键盘右侧collection背景下边缘颜色'],
     },
     descriptionCollectionCellStyle: {

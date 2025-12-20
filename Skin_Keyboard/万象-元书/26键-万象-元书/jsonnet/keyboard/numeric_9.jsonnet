@@ -104,7 +104,7 @@ local keyboard(theme, orientation) =
     },
     collectionBackgroundStyle: {
       buttonStyleType: 'geometry',
-      insets: { top: 5, left: 3, bottom: 5, right: 3 },
+      insets: if orientation == 'portrait' then Settings.button_insets.portrait else Settings.button_insets.landscape,
       normalColor: color[theme]['符号键盘左侧collection背景颜色'],
       cornerRadius: 7,
       normalLowerEdgeColor: color[theme]['符号键盘左侧collection背景下边缘颜色'],
@@ -116,7 +116,7 @@ local keyboard(theme, orientation) =
     },
     collectionCellBackgroundStyle: {
       buttonStyleType: 'geometry',
-      insets: { top: 5, left: 3, bottom: 5, right: 3 },
+      insets: if orientation == 'portrait' then Settings.button_insets.portrait else Settings.button_insets.landscape,
       highlightColor: color[theme]['字母键背景颜色-普通'],
       normalColor: 'ffffff00',
       cornerRadius: 7,
@@ -404,7 +404,7 @@ local keyboard(theme, orientation) =
     },
     functionBackgroundStyle: {
       buttonStyleType: 'geometry',
-      insets: { top: 5, left: 3, bottom: 5, right: 3 },
+      insets: if orientation == 'portrait' then Settings.button_insets.portrait else Settings.button_insets.landscape,
       normalColor: color[theme]['字母键背景颜色-普通'],
       highlightColor: color[theme]['字母键背景颜色-高亮'],
       cornerRadius: 7,
