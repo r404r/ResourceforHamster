@@ -129,9 +129,10 @@ local LayoutType = import '../custom/Custom.libsonnet';
       label: { systemImageName: 'chevron.down' },
       // center: { x: 0.5, y: 0.8 },
     },
-    shift: { 
-      action: { shortcut: '#中英切换' },
-      label: { systemImageName: 'translate' },
+    shift: {
+      action: { character: '\\' },
+      // action: { shortcut: '#中英切换' },
+      // label: { systemImageName: 'translate' },
       // center: { x: 0.5, y: 0.8 },
     }, // 英文
     // '123': { action: { shortcut: '#方案切换' } },
