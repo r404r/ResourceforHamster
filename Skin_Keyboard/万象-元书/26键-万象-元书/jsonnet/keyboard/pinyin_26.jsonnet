@@ -1170,7 +1170,7 @@ local keyboard(theme, orientation, keyboardLayout) =
 
     enterButtonBlueBackgroundStyle: {
       buttonStyleType: 'geometry',
-      insets: if orientation == 'portrait' then { top: 5, left: 3, bottom: 5, right: 3 } else { top: 3, left: 2, bottom: 3, right: 2 },
+      insets: if orientation == 'portrait' then Settings.button_insets.portrait else Settings.button_insets.landscape,
       normalColor: color[theme]['enter键背景(蓝色)'],
       highlightColor: color[theme]['功能键背景颜色-高亮'],
       cornerRadius: 7,
@@ -1179,7 +1179,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     },
     alphabeticBackgroundStyle: {
       buttonStyleType: 'geometry',
-      insets: if orientation == 'portrait' then { top: 5, left: 3, bottom: 5, right: 3 } else { top: 3, left: 2, bottom: 3, right: 2 },
+      insets: if orientation == 'portrait' then Settings.button_insets.portrait else Settings.button_insets.landscape,
       normalColor: color[theme]['字母键背景颜色-普通'],
       highlightColor: color[theme]['字母键背景颜色-高亮'],
       cornerRadius: 7,
@@ -1188,7 +1188,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     },
     systemButtonBackgroundStyle: {
       buttonStyleType: 'geometry',
-      insets: if orientation == 'portrait' then { top: 5, left: 3, bottom: 5, right: 3 } else { top: 3, left: 2, bottom: 3, right: 2 },
+      insets: if orientation == 'portrait' then Settings.button_insets.portrait else Settings.button_insets.landscape,
       normalColor: color[theme]['功能键背景颜色-普通'],
       highlightColor: color[theme]['功能键背景颜色-高亮'],
       cornerRadius: 7,
