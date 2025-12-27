@@ -210,8 +210,6 @@
         { action: { character: 'N' }, label: { text: 'N' } },
       ],
     },
-
-
     m: {
       selectedIndex: 1,
       list: [
@@ -220,6 +218,13 @@
       ],
     },
     spaceLeft: {
+      selectedIndex: 1,
+      list: [
+        { action: { symbol: ',' }, label: { text: ',' } },
+        { action: { symbol: '.' }, label: { text: '.' } },
+      ],
+    },
+    spaceRight: {
       selectedIndex: 1,
       list: [
         { action: { symbol: ',' }, label: { text: ',' } },
