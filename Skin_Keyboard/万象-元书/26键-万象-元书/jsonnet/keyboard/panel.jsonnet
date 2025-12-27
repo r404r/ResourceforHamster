@@ -39,7 +39,7 @@ local keyboard(theme, orientation) =
   createButton(
     'KeyboardSettings',
     { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSettings' },
-    'keyboard',
+    'gearshape.fill',
     '键盘设置',
     theme
   ) +
@@ -47,7 +47,7 @@ local keyboard(theme, orientation) =
   createButton(
     'Switcher',
     { shortcutCommand: '#RimeSwitcher' },
-    'switch.2',
+    'filemenu.and.selection',
     '方案开关',
     theme
   ) +
@@ -66,10 +66,10 @@ local keyboard(theme, orientation) =
     theme
   ) +
   createButton(
-    'toogleEmbedded',
-    { shortcut: '#toggleEmbeddedInputMode' },
-    'square.and.pencil',
-    '内嵌开关',
+    'Performance',
+    { shortcut: '#keyboardPerformance' },
+    'gauge.with.dots.needle.bottom.50percent',
+    '内存占用',
     theme
   ) +
   createButton(
@@ -129,7 +129,7 @@ local keyboard(theme, orientation) =
             { Cell: 'KeyboardSettingsButton' }, // 键盘设置
             { Cell: 'SwitcherButton' }, // 方案开关
             { Cell: 'FinderButton' },   // 文件管理
-            { Cell: 'toogleEmbeddedButton' }, // 内嵌开关
+            { Cell: 'Performance' }, // 
           ],
         },
       },
