@@ -168,6 +168,6 @@ local ios26_dark = base_dark + {
 };
 
 {
-  light: if Settings.ios26_style then ios26_light else base_light_eye,
+  light: if Settings.ios26_style then ios26_light else base_light,
   dark: if Settings.ios26_style then ios26_dark else base_dark,
 }
