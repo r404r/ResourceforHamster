@@ -129,7 +129,7 @@ local keyboard(theme, orientation) =
             { Cell: 'KeyboardSettingsButton' }, // 键盘设置
             { Cell: 'SwitcherButton' }, // 方案开关
             { Cell: 'FinderButton' },   // 文件管理
-            { Cell: 'Performance' }, // 
+            { Cell: 'PerformanceButton' }, // 
           ],
         },
       },
