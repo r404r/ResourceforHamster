@@ -973,7 +973,7 @@ local keyboard(theme, orientation, keyboardLayout) =
     ) + {
       backgroundStyle: 'alphabeticBackgroundStyle',
       action: { character: '.' },
-      repeatAction: { character: '.' },
+      // repeatAction: { character: '.' },
       foregroundStyle: [
         'spaceRightButtonForegroundStyle',
         'spaceRightButtonForegroundStyle2',
