@@ -97,6 +97,54 @@ local base_dark = {
   '键盘背景颜色': '47474703',  // 99%透明度，最好不要全透明
 };
 
+local base_light_eye = {
+  '字母键背景颜色-普通': 'FAF9F5',
+  '字母键背景颜色-高亮': 'EBEADF',
+
+  '功能键背景颜色-普通': 'EFEDE6',
+  '功能键背景颜色-高亮': 'FAF9F5',
+
+  'enter键背景(蓝色)': '1162ff',
+
+  '气泡背景颜色': 'FAF9F5',
+  '气泡边缘颜色': 'CDCAC2',
+  '气泡高亮颜色': '0279FE',
+
+  '底边缘颜色-普通': 'CDCAC2',
+  '底边缘颜色-高亮': 'CDCAC2',
+
+  '长按选中字体颜色': 'FFFFFF',
+  '长按非选中字体颜色': '2C2C2C',
+  '长按选中背景颜色': '007AFF',
+  '长按背景阴影颜色': 'CDCAC2',
+  '长按背景颜色': 'FAF9F5',
+
+  '候选字体选中字体颜色': '2C2C2C',
+  '候选字体未选中字体颜色': '2C2C2C',
+  '选中候选背景颜色': 'EFEDE6',
+
+  'toolbar按键颜色': '2C2C2C',
+  '划动字符颜色': '8E8E93',
+  '按下气泡文字颜色': '2C2C2C',
+
+  // 数字键盘颜色
+  'collection前景颜色': '2C2C2C',
+
+  // 符号键盘颜色
+  '列表选中字体颜色': '2C2C2C',
+  '列表未选中字体颜色': '2C2C2C',
+  '符号键盘左侧collection背景颜色': 'EFEDE6',
+  '符号键盘左侧collection背景下边缘颜色': 'CDCAC2',
+  '符号键盘右侧collection背景颜色': 'FAF9F5',
+  '符号键盘右侧collection背景下边缘颜色': 'CDCAC2',
+  '按键边缘颜色': 'CDCAC2',
+
+  '按键前景颜色': '2C2C2C',
+
+  // 全部键盘的背景色
+  '键盘背景颜色': 'F4F1E9',
+};
+
 // iOS26 风格覆盖：Light 模式统一为白色（字母键风格），Dark 模式统一为灰色（功能键风格）
 local ios26_light = base_light + {
   '字母键背景颜色-普通': 'FFFFFF',
@@ -120,6 +168,6 @@ local ios26_dark = base_dark + {
 };
 
 {
-  light: if Settings.ios26_style then ios26_light else base_light,
+  light: if Settings.ios26_style then ios26_light else base_light_eye,
   dark: if Settings.ios26_style then ios26_dark else base_dark,
 }
