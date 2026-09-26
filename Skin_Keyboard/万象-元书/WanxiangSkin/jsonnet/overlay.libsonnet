@@ -43,7 +43,7 @@ local zmPinyin = {
   c: [{ sendKeys: '/rq' }, { image: 'calendar' }],
   v: [{ sendKeys: '/dt' }, { image: 'clock.circle' }],
   b: [{ sendKeys: '/hb' }, { image: 'chineseyuanrenminbisign.square.fill' }],
-  n: [{ sendKeys: '/rq' }, { image: 'calendar.badge.exclamationmark' }],
+  n: [{ sendKeys: '/nl' }, { image: 'moon.fill' }],  // 农历（用户决定 2026-09-26，RIME-20260926-015 O3；原为与 c 重复的 /rq）
   m: [{ shortcut: '#简繁切换' }, { text: '繁' }],
 };
 local zmAlphabetic = {
@@ -57,8 +57,28 @@ local zmSwipes(base, table) = merge([swipe(base, k, 'Down', table[k][0], table[k
 // 4. shift：上划简繁切换，下划 `\`
 local shiftSwipes = { shiftButton+: { swipeUpAction: { shortcut: '#简繁切换' }, swipeDownAction: { character: '\\' } } };
 
-// 5. 删除键上划 #重输（清空 preedit，RIME-20260926-013）
-local backspace = { backspaceButton+: { swipeUpAction: { shortcut: '#重输' } } };
+// 5. 删除键：上划 #重输（清空 preedit，RIME-20260926-013）；
+//    下划：元书没有 #undo 指令（按"无动作"处理，RIME-20260926-015 O1）→ 平时不设动作，
+//    输入时发送 Control+BackSpace（万象 v18 editor: back_syllable，删除一个音节）
+local backspace(base) = {
+  backspaceButton+: {
+    swipeUpAction: { shortcut: '#重输' },
+    swipeDownAction:: null,
+    notification: ['backspaceButtonPreeditNotification'],
+  },
+  backspaceButtonPreeditNotification: {
+    notificationType: 'preeditChanged',
+    backgroundStyle: base.backspaceButton.backgroundStyle,
+    foregroundStyle: 'backspaceButtonForegroundStyle',
+    // 显式写出点按 / 连删 / 上划，避免通知只含下划时其他动作丢失
+    action: 'backspace',
+    repeatAction: 'backspace',
+    swipeUpAction: { shortcut: '#重输' },
+    swipeDownAction: { sendKeys: 'Control+BackSpace' },
+  },
+};
+// 英文键盘：去掉无效的 #undo（上划保持上游 #deleteText）
+local backspaceEn = { backspaceButton+: { swipeDownAction:: null } };
 
 // 6. 底行：中英键在空格左侧，"，。"键在空格右侧（用户决定，2026-09-26）
 local swapBottomRow(node, cn2en) =
@@ -210,11 +230,11 @@ local panel(base, orientation) =
     base + (
       if prefix == 'pinyin_26' then
         portraitInsets(orientation) + qpSwipes(base, 'character') + zmSwipes(base, zmPinyin)
-        + shiftSwipes + backspace + bottomRow(base, 'cn2enButton', true) + cn2enMenu + common
+        + shiftSwipes + backspace(base) + bottomRow(base, 'cn2enButton', true) + cn2enMenu + common
       else if prefix == 'alphabetic_26' then
         // 英文键盘删除键上划保持上游 #deleteText（决定 12B）
         portraitInsets(orientation) + qpSwipes(base, 'symbol') + zmSwipes(base, zmAlphabetic)
-        + shiftSwipes + bottomRow(base, 'en2cnButton', false) + arrowIcons(base) + button123(base) + toolbar(base)
+        + shiftSwipes + backspaceEn + bottomRow(base, 'en2cnButton', false) + arrowIcons(base) + button123(base) + toolbar(base)
       else if prefix == 'temp_pinyin' then
         portraitInsets(orientation) + button123(base)
       else if prefix == 'ipad_pinyin_26' || prefix == 'ipad_alphabetic_26' then
