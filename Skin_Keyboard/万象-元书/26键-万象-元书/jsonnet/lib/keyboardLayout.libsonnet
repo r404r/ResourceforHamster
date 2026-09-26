@@ -1,4 +1,5 @@
 local color = import 'color.libsonnet';
+local Settings = import '../custom/Custom.libsonnet';
 
 {
   getKeyboardLayout(theme)::
@@ -97,12 +98,7 @@ local color = import 'color.libsonnet';
           size: {
             height: {percentage: 0.73},
           },
-          insets: {
-            top: 3,
-            bottom: 3,
-            left: 4,
-            right: 4,
-          },
+          insets: Settings.keyboard_insets.portrait,  // 竖屏键盘区边距，见 custom/Custom.libsonnet
           backgroundStyle: 'keyboardBackgroundStyle',
         },
         keyboardBackgroundStyle: {
@@ -405,12 +401,7 @@ local color = import 'color.libsonnet';
           size: {
             height: {percentage: 0.73},
           },
-          insets: {
-            top: 3,
-            bottom: 3,
-            left: 4,
-            right: 4,
-          },
+          insets: Settings.keyboard_insets.portrait,  // 竖屏键盘区边距，见 custom/Custom.libsonnet
           backgroundStyle: 'keyboardBackgroundStyle',
         },
         keyboardBackgroundStyle: {

@@ -10,5 +10,10 @@
     portrait: { top: 3.8, left: 2.5, right: 2.5, bottom: 3.8 },  // 若需要间隔大稍大，可使用：{ top: 5, left: 3, bottom: 5, right: 3 }
     landscape: { top: 2.2, left: 1.8, bottom: 2.2, right: 1.8 },  // 若需要间隔大稍大，可按需调整:{top: 3, left: 2, bottom: 3, right: 2}
   },
+  // 竖屏 26 键键盘区（字母区容器）的边距，单位 pt。改为 0 时按键占满整个键盘区：边缘按键的触摸区贴到屏幕边缘，按键间距略增。
+  // 原值 { top: 3, bottom: 3, left: 4, right: 4 }；RIME-20260926-003 实验值为全 0。
+  keyboard_insets: {
+    portrait: { top: 0, bottom: 0, left: 0, right: 0 },
+  },
   cornerRadius: 8, // 圆角大小，建议7或者8或者8.5即可
 }
