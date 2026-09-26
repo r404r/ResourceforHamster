@@ -734,16 +734,17 @@ local keyboard(theme, orientation, keyboardLayout) =
         },
       ],
     },
+    // RIME-20260926-008：移除"拆分"组（万象 v18 标准版无 chaifen_switch）；混合组改读 v18 的 english 开关
     cn2enButtonHintSymbolsStyleOf6: super['cn2enButtonHintSymbolsStyleOf6'] + {
       foregroundStyle: [
         {
           styleName: 'cn2enButtonHintSymbolsForegroundStyleOf6',
-          conditionKey: 'rime$chaifen_switch',
+          conditionKey: 'rime$super_tips',
           conditionValue: 'true',
         },
         {
           styleName: 'cn2enButtonHintSymbolsForegroundStyleOf7',
-          conditionKey: 'rime$chaifen_switch',
+          conditionKey: 'rime$super_tips',
           conditionValue: 'false',
         },
       ],
@@ -752,32 +753,13 @@ local keyboard(theme, orientation, keyboardLayout) =
       foregroundStyle: [
         {
           styleName: 'cn2enButtonHintSymbolsForegroundStyleOf8',
-          conditionKey: 'rime$super_tips',
+          conditionKey: 'rime$english',
           conditionValue: 'true',
         },
         {
           styleName: 'cn2enButtonHintSymbolsForegroundStyleOf9',
-          conditionKey: 'rime$super_tips',
+          conditionKey: 'rime$english',
           conditionValue: 'false',
-        },
-      ],
-    },
-    cn2enButtonHintSymbolsStyleOf10: super['cn2enButtonHintSymbolsStyleOf10'] + {
-      foregroundStyle: [
-        {
-          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf10',
-          conditionKey: 'rime$mixed',
-          conditionValue: 'true',
-        },
-        {
-          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf11',
-          conditionKey: 'rime$zh_only',
-          conditionValue: 'true',
-        },
-        {
-          styleName: 'cn2enButtonHintSymbolsForegroundStyleOf12',
-          conditionKey: 'rime$en_only',
-          conditionValue: 'true',
         },
       ],
     },
@@ -787,7 +769,6 @@ local keyboard(theme, orientation, keyboardLayout) =
         'cn2enButtonHintSymbolsStyleOf4',
         'cn2enButtonHintSymbolsStyleOf6',
         'cn2enButtonHintSymbolsStyleOf8',
-        'cn2enButtonHintSymbolsStyleOf10',
       ],
     },
 
@@ -986,7 +967,7 @@ local keyboard(theme, orientation, keyboardLayout) =
       notificationType: 'preeditChanged',
       backgroundStyle: 'alphabeticBackgroundStyle',
       foregroundStyle: 'spaceRightButtonPreeditForegroundStyle',
-      action: { sendKeys: 'Break' },
+      action: Settings.tips_button_action,  // tips 上屏键，见 custom/Custom.libsonnet
       hintSymbolsStyle: 'cn2enButtonHintSymbolsStyle',  // 预编辑通知的长按菜单复用普通状态的长按菜单
     },
     spaceRightButtonPreeditForegroundStyle: {

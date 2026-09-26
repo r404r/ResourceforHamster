@@ -241,13 +241,11 @@
         { action: { sendKeys: 'Control+Shift+4' }, label: { text: '台中' } },  //3
         { action: { sendKeys: 'Control+e' }, label: { text: '翻译' } },  //4*
         { action: { sendKeys: 'Control+e' }, label: { text: '原文' } },  //5
-        { action: { sendKeys: 'Control+c' }, label: { text: '拆分' } },  //6*
-        { action: { sendKeys: 'Control+c' }, label: { text: '拆关' } },  //7
-        { action: { sendKeys: 'Control+t' }, label: { text: '提示' } },  //8*
-        { action: { sendKeys: 'Control+t' }, label: { text: '提关' } },  //9
-        { action: { sendKeys: 'Control+q' }, label: { text: '混合' } },  //10*
-        { action: { sendKeys: 'Control+q' }, label: { text: '中文' } },  //11
-        { action: { sendKeys: 'Control+q' }, label: { text: '英文' } },  //12
+        // RIME-20260926-008：移除"拆分 / 拆关"（万象 v18 标准版无 chaifen_switch）与"英文"（v18 的 english 开关只有开 / 关两态）
+        { action: { sendKeys: 'Control+t' }, label: { text: '提示' } },  //6*
+        { action: { sendKeys: 'Control+t' }, label: { text: '提关' } },  //7
+        { action: { sendKeys: 'Control+q' }, label: { text: '混合' } },  //8*  中英混输开（rime$english = true）
+        { action: { sendKeys: 'Control+q' }, label: { text: '中文' } },  //9   中英混输关（rime$english = false）
       ],
     },
     enter: {
