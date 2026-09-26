@@ -59,7 +59,13 @@ jobs:
         run: |
           # 对比基准：当前 commit 祖先中最近创建的另一个 release/* tag（RIME-20260926-009）。
           # 只看祖先链，避免与其他分支上的发布比较；找不到基准（首次发布）时全部打包。
-          PREV_TAG=$(git tag --merged HEAD --list 'release/*' --sort=-creatordate | grep -vxF "$CURRENT_TAG" | head -n 1 || true)
+          # 正式版只与上一个正式版比较（跳过 -alpha/-beta/-rc/-exp/-test 预发布），否则由预发布转正时没有变更、不会打包（RIME-20260926-014）
+          PRE_RE='-(alpha|beta|rc|exp|test)[0-9.]*$'
+          if [[ "$CURRENT_TAG" =~ $PRE_RE ]]; then
+            PREV_TAG=$(git tag --merged HEAD --list 'release/*' --sort=-creatordate | grep -vxF "$CURRENT_TAG" | head -n 1 || true)
+          else
+            PREV_TAG=$(git tag --merged HEAD --list 'release/*' --sort=-creatordate | grep -vxF "$CURRENT_TAG" | grep -vE -- "$PRE_RE" | head -n 1 || true)
+          fi
           echo "prev_tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
           if [ -n "$PREV_TAG" ]; then
             echo "Previous release tag: $PREV_TAG ($(git rev-parse --short "$PREV_TAG^{commit}"))"
@@ -133,47 +139,6 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Check and package 26键-万象-元书 directory
-        id: wanxiang_dir
-        env:
-          TAG_NAME: ${{ steps.tag.outputs.tag_name }}
-          PREV_TAG: ${{ steps.prev.outputs.prev_tag }}
-        run: |
-          # Set UTF-8 locale to handle Chinese characters properly
-          export LANG=C.UTF-8
-          export LC_ALL=C.UTF-8
-
-          changed() { [ -z "$PREV_TAG" ] || ! git diff --quiet "$PREV_TAG" HEAD -- "$1"; }
-
-          TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
-          PACKAGED_FILES=""
-          PACKAGED_NOTES=""
-
-          if [ ! -d "$TARGET_DIR" ]; then
-            echo "Directory $TARGET_DIR does not exist"
-          elif ! changed "$TARGET_DIR"; then
-            echo "Unchanged since $PREV_TAG, skipping: $TARGET_DIR"
-          else
-            echo "Changed since ${PREV_TAG:-<none>}: $TARGET_DIR"
-            [ -n "$PREV_TAG" ] && git diff --stat "$PREV_TAG" HEAD -- "$TARGET_DIR" | tail -n 1
-
-            # Create zip file (exclude macOS metadata files)
-            (cd Skin_Keyboard/万象-元书 && zip -r "26keys-wanxiang-ys_${TAG_NAME}.cskin" "26键-万象-元书" -x "*.DS_Store" -x "__MACOSX" -x "._*")
-            PACKAGED_FILES="Skin_Keyboard/万象-元书/26keys-wanxiang-ys_${TAG_NAME}.cskin"
-            PACKAGED_NOTES="- \`26keys-wanxiang-ys_${TAG_NAME}.cskin\`：26键-万象-元书"
-            echo "Packaged: 26keys-wanxiang-ys_${TAG_NAME}.cskin"
-          fi
-
-          # Save packaged files list
-          {
-            echo "packaged_files<<EOF"
-            echo "$PACKAGED_FILES"
-            echo "EOF"
-            echo "packaged_notes<<EOF"
-            echo "$PACKAGED_NOTES"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
       - name: Check and package WanxiangSkin directory
         id: wanxiangskin_dir
         env:
@@ -220,15 +185,13 @@ jobs:
         id: all_files
         env:
           FILES_YUANSHU: ${{ steps.yuanshu_dirs.outputs.packaged_files }}
-          FILES_WANXIANG: ${{ steps.wanxiang_dir.outputs.packaged_files }}
           NOTES_YUANSHU: ${{ steps.yuanshu_dirs.outputs.packaged_notes }}
-          NOTES_WANXIANG: ${{ steps.wanxiang_dir.outputs.packaged_notes }}
           FILES_WANXIANGSKIN: ${{ steps.wanxiangskin_dir.outputs.packaged_files }}
           NOTES_WANXIANGSKIN: ${{ steps.wanxiangskin_dir.outputs.packaged_notes }}
         run: |
           # Remove empty lines
-          FILES=$(printf '%s\n%s\n%s\n' "$FILES_WANXIANGSKIN" "$FILES_YUANSHU" "$FILES_WANXIANG" | sed '/^$/d')
-          NOTES=$(printf '%s\n%s\n%s\n' "$NOTES_WANXIANGSKIN" "$NOTES_YUANSHU" "$NOTES_WANXIANG" | sed '/^$/d')
+          FILES=$(printf '%s\n%s\n' "$FILES_WANXIANGSKIN" "$FILES_YUANSHU" | sed '/^$/d')
+          NOTES=$(printf '%s\n%s\n' "$NOTES_WANXIANGSKIN" "$NOTES_YUANSHU" | sed '/^$/d')
           {
             echo "notes<<EOF"
             echo "$NOTES"

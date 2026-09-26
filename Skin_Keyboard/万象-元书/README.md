@@ -4,7 +4,7 @@
 - 个人定制全部位于 `WanxiangSkin/jsonnet/overlay.libsonnet`，在渲染结果上覆盖，例如：竖屏 26 键容器边距 0、中英键与"，。"键位置互换、
   q–p 下划数字 / 上划符号、z–n 下划 `/` 快捷指令、删除键上划 `#重输`、中英键长按菜单对齐万象 v18（混合开关读取 `english`）。
 - 配套的 Rime 配置为 [r404r/rime_wanxiang_mod](https://github.com/r404r/rime_wanxiang_mod)，而不是本仓库的 `Input_Method/万象拼音/Rime4Hamster/`。
-- 发布包：[release](https://github.com/r404r/ResourceforHamster/releases) 中的 `wanxiangskin-r404r_vX.cskin`（v7 起）；旧结构为 `26keys-wanxiang-ys_vX.cskin`（v6）。
+- 发布包：[release](https://github.com/r404r/ResourceforHamster/releases) 中的 `wanxiangskin-r404r_vX.cskin`（v7 起）。v6 及以前的旧结构 `26键-万象-元书` 已退役。
 
 ---
 

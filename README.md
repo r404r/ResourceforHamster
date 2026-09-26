@@ -6,12 +6,11 @@ fork 自 [BlackCCCat](https://github.com/BlackCCCat/ResourceforHamster)，定期
 ## 概要
 - 主要维护 **万象键盘皮肤**，发布包见 [release](https://github.com/r404r/ResourceforHamster/releases)。
   - v7 起基于上游 `WanxiangSkin`，个人定制集中在 `WanxiangSkin/jsonnet/overlay.libsonnet`（覆盖层，不改上游源码）。
-  - v6 及以前为旧结构 `26键-万象-元书`（过渡期保留，之后退役）。
+  - v6 及以前为旧结构 `26键-万象-元书`，已于 v7.0.0.0 退役（历史见 tag `release/v6.0.1.0`）。
 - 收集了其它来自网络的 **元书** 键盘皮肤，主要是自己使用，若有侵权请联系我。其它皮肤不作为主要维护对象。
 
 ## 元书键盘皮肤
 - [万象键盘 r404r（WanxiangSkin + 覆盖层，v7）](Skin_Keyboard/万象-元书/WanxiangSkin)（主要维护）
-- [26键-万象-元书（v6，旧结构）](Skin_Keyboard/万象-元书/26键-万象-元书)
 - [元书-仿仓默认](Skin_Keyboard/元书-仿仓默认)
 - [元书-空山素影](Skin_Keyboard/元书-空山素影)
 - [元书-送你一朵小红花](Skin_Keyboard/元书-送你一朵小红花-元书)
