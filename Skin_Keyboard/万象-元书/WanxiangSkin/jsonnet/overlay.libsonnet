@@ -100,20 +100,125 @@ local cn2enMenu = {
 };
 
 // ---------------------------------------------------------------------------
+// 第二批（用户决定 2026-09-26：3、6、7、8、11 保留 v6，其余采用上游）
+
+// 8. 空格：竖屏显示当前方案名、横屏显示 "Rime"；不要上游新增的空格上划（Shift+space）（决定 3A）
+local spaceLabel(base) =
+  (if has(base, 'spaceButtonForegroundStyle1') then { spaceButtonForegroundStyle1+: { text: '$rimeSchemaName', center: { x: 0.5, y: 0.75 } } } else {})
+  + (if has(base, 'spaceSecondButtonForegroundStyle1') then { spaceSecondButtonForegroundStyle1+: { text: 'Rime', center: { x: 0.85, y: 0.8 } } } else {})
+  + merge([{ [b]+: { swipeUpAction:: null } } for b in ['spaceButton', 'spaceFirstButton', 'spaceSecondButton'] if has(base, b)]);
+
+// 9. 回车默认标签 «««（决定 4A）
+local enterLabel(base) = if has(base, 'enterButtonForegroundStyle0') then { enterButtonForegroundStyle0+: { text: '«««' } } else {};
+
+// 10. 功能行左右箭头使用实心箭头（决定 5A）
+local arrowIcons(base) = merge([
+  { [s]+: { systemImageName: std.strReplace(base[s].systemImageName, 'arrowshape.turn.up.', 'arrowshape.') } }
+  for s in ['leftButtonForegroundStyle', 'leftButtonUppercasedStateForegroundStyle', 'rightButtonForegroundStyle', 'rightButtonUppercasedStateForegroundStyle']
+  if has(base, s) && has(base[s], 'systemImageName')
+]);
+
+// 11. 123 键：横向滑动选择由 Custom.button_123_config.enable_slide 打开；上划进入符号键盘（决定 6A）
+local button123(base) =
+  if has(base, '123Button') then
+    { '123Button'+: { swipeUpAction: { keyboardType: 'symbolic' } } }
+    // 上游在 enable_slide=true 时，123Button 不再引用 123ButtonHintStyle，但仍输出该样式，且它引用的前景样式并不存在
+    // （校验器报"引用了不存在的样式"）。该样式无人引用，隐藏即可，不影响显示
+    + (if !has(base['123Button'], 'hintStyle') && has(base, '123ButtonHintStyle') then { '123ButtonHintStyle':: null } else {})
+  else {};
+
+// 11b. iPad：上游在 enable_slide=true 时 ipad123 按键引用的前景样式不存在（图标空白）→ 用 123ButtonForegroundStyle 补上
+//      （本机无 iPad，仅保证配置引用完整；Unverified）
+local ipad123Fix(base) =
+  (if has(base, '123ButtonHintStyle') then { '123ButtonHintStyle':: null } else {})
+  + merge([
+    { [n]: base['123ButtonForegroundStyle'] }
+    for n in ['ipad123ButtonForegroundStyle', 'ipad123RightButtonForegroundStyle']
+    if !has(base, n) && has(base, '123ButtonForegroundStyle')
+  ]);
+
+// 12. 工具栏：左侧滑动区 + 固定 面板 / 符号 / 表情 / 常用语 / 剪贴板 / 收起（决定 7A）
+local toolbarSlide = [
+  'toolbarButtonOpenAppStyle', 'toolbarButtonScriptStyle', 'toolbarButtonKeyboardSettingsStyle', 'toolbarButtonKeyboardSkinsStyle',
+  'toolbarButtonKeyboardPerformanceStyle', 'toolbarButtonRimeSwitcherStyle', 'toolbarButtonEmbeddingToggleStyle',
+];
+local toolbarFixed = [
+  'toolbarButtonPanelStyle', 'toolbarButtonSymbolStyle', 'toolbarButtonEmojiStyle', 'toolbarButtonNoteStyle', 'toolbarButtonClipboardStyle', 'toolbarButtonHideStyle',
+];
+local toolbarIcons = {
+  toolbarButtonOpenAppStyle: 'swirl.circle.righthalf.filled',
+  toolbarButtonScriptStyle: 'apple.terminal.fill',
+  toolbarButtonKeyboardSkinsStyle: 'paintpalette.fill',
+  toolbarButtonPanelStyle: 'gearshape.fill',
+  toolbarButtonSymbolStyle: 'command.circle.fill',
+};
+local toolbar(base) =
+  if has(base, 'toolbarLayout') && has(base, 'toolbarSlideButtonsLeft') then {
+    toolbarLayout: [{ HStack: { subviews: [{ Cell: 'toolbarSlideButtonsLeft' }] + [{ Cell: c } for c in toolbarFixed] } }],
+    toolbarSlideButtonsLeft+: { size: { width: '2/9' } },
+    horizontalSymbolsDataSourceLeft: [
+      { label: std.toString(i), action: base[toolbarSlide[i]].action, styleName: toolbarSlide[i] }
+      for i in std.range(0, std.length(toolbarSlide) - 1)
+    ],
+  } + merge([
+    // v6 图标
+    { [base[k].foregroundStyle]+: { systemImageName: toolbarIcons[k] } }
+    for k in std.objectFields(toolbarIcons)
+    if has(base, k) && std.isString(base[k].foregroundStyle) && has(base, base[k].foregroundStyle)
+  ]) else {};
+
+// 13. 浮动面板：3 行 12 键（决定 8A）
+local panelRows = [
+  [['KeyboardSettingsButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSettings' }, 'gearshape.fill', '键盘设置'],
+   ['SwitcherButton', { shortcutCommand: '#RimeSwitcher' }, 'filemenu.and.selection', '方案开关'],
+   ['FinderButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/finder' }, 'folder', '文件管理'],
+   ['PerformanceButton', { shortcut: '#keyboardPerformance' }, 'gauge.with.dots.needle.bottom.50percent', '内存占用']],
+  [['DeployButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/rime?action=deploy' }, 'command.circle', '重新部署'],
+   ['SyncButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/rime?action=sync' }, 'arrow.trianglehead.2.clockwise.rotate.90', '同步方案'],
+   ['ScriptButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/script' }, 'apple.terminal.fill', '脚本管理'],
+   ['InputSchemaButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/inputSchema' }, 'filemenu.and.selection', '方案管理']],
+  [['TraditionalChineseButton', { shortcut: '#简繁切换' }, 'character.square.fill.zh', '繁简切换'],
+   ['LeftHandModeButton', { shortcut: '#左手模式' }, 'keyboard.onehanded.left.fill', '左手键盘'],
+   ['RightHandModeButton', { shortcut: '#右手模式' }, 'keyboard.onehanded.right.fill', '右手键盘'],
+   ['KeyboardThemeButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSkins' }, 'paintpalette.fill', '键盘皮肤']],
+];
+// 以上游的 FinderButton 为模板（背景、字号、位置等外观沿用上游），只替换动作、图标与文字
+local panel(base, orientation) =
+  { keyboardLayout: [{ HStack: { subviews: [{ Cell: b[0] } for b in row] } } for row in panelRows] }
+  + { keyboardStyle+: { insets: if orientation == 'portrait' then { top: 20, bottom: 20, left: 24, right: 24 } else { top: 5, bottom: 5, left: 24, right: 24 } } }
+  + merge([
+    {
+      [b[0]]: base.FinderButton { action: b[1], foregroundStyle: [b[0] + 'ForegroundStyle', b[0] + 'ForegroundStyle2'], size: { height: '1/2' } },
+      [b[0] + 'ForegroundStyle']: base.FinderButtonForegroundStyle { systemImageName: b[2] },
+      [b[0] + 'ForegroundStyle2']: base.FinderButtonForegroundStyle2 { text: b[3] },
+    }
+    for row in panelRows
+    for b in row
+  ]);
+
+// ---------------------------------------------------------------------------
 {
   // 皮肤元信息（config.yaml）
   config: { name: '万象键盘r404r-v7', author: 'BlackCCCat, r404r' },
 
   apply(prefix, theme, orientation, base)::
+    local common = spaceLabel(base) + enterLabel(base) + arrowIcons(base) + button123(base) + toolbar(base);
     base + (
       if prefix == 'pinyin_26' then
         portraitInsets(orientation) + qpSwipes(base, 'character') + zmSwipes(base, zmPinyin)
-        + shiftSwipes + backspace + bottomRow(base, 'cn2enButton', true) + cn2enMenu
+        + shiftSwipes + backspace + bottomRow(base, 'cn2enButton', true) + cn2enMenu + common
       else if prefix == 'alphabetic_26' then
+        // 英文键盘删除键上划保持上游 #deleteText（决定 12B）
         portraitInsets(orientation) + qpSwipes(base, 'symbol') + zmSwipes(base, zmAlphabetic)
-        + shiftSwipes + backspace + bottomRow(base, 'en2cnButton', false)
+        + shiftSwipes + bottomRow(base, 'en2cnButton', false) + arrowIcons(base) + button123(base) + toolbar(base)
       else if prefix == 'temp_pinyin' then
-        portraitInsets(orientation)
+        portraitInsets(orientation) + button123(base)
+      else if prefix == 'ipad_pinyin_26' || prefix == 'ipad_alphabetic_26' then
+        ipad123Fix(base)
+      else if prefix == 'numeric_9' then
+        arrowIcons(base) + toolbar(base)
+      else if prefix == 'panel' then
+        panel(base, orientation)
       else {}
     ),
 }

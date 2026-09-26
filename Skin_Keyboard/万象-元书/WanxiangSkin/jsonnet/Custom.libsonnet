@@ -76,7 +76,7 @@
   button_123_config: {
     // true: 保持当前 horizontalSymbols 滑动切换
     // false: 改用下方配置的长按菜单或上下滑动
-    enable_slide: false,
+    enable_slide: true,  // r404r：横向滑动选择（v6 行为，用户决定 6A）
 
     // 当 enable_slide 为 false 时生效
     // hint_symbols: 使用长按菜单显示「符号键盘 / emoji键盘」
@@ -117,7 +117,7 @@
   show_wanxiang: true,
 
   // 是否启用 iOS26 风格（统一按键颜色，Light模式下调整高亮）
-  ios26_style: true,
+  ios26_style: false,  // r404r：沿用 v6 配色（用户决定 11A）
 
   // 字号配置
   font_size_config: {

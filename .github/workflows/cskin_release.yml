@@ -174,6 +174,48 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
+      - name: Check and package WanxiangSkin directory
+        id: wanxiangskin_dir
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.tag_name }}
+          PREV_TAG: ${{ steps.prev.outputs.prev_tag }}
+        run: |
+          # v7 起的主皮肤：上游 WanxiangSkin + r404r 覆盖层（RIME-20260926-014，ADR-0006）
+          export LANG=C.UTF-8
+          export LC_ALL=C.UTF-8
+
+          changed() { [ -z "$PREV_TAG" ] || ! git diff --quiet "$PREV_TAG" HEAD -- "$1"; }
+
+          TARGET_DIR="Skin_Keyboard/万象-元书/WanxiangSkin"
+          ASSET="wanxiangskin-r404r_${TAG_NAME}.cskin"
+          PACKAGED_FILES=""
+          PACKAGED_NOTES=""
+
+          if [ ! -d "$TARGET_DIR" ]; then
+            echo "Directory $TARGET_DIR does not exist"
+          elif ! changed "$TARGET_DIR"; then
+            echo "Unchanged since $PREV_TAG, skipping: $TARGET_DIR"
+          else
+            echo "Changed since ${PREV_TAG:-<none>}: $TARGET_DIR"
+            [ -n "$PREV_TAG" ] && git diff --stat "$PREV_TAG" HEAD -- "$TARGET_DIR" | tail -n 1
+
+            # 与上游 workflow 相同：把 tag 写入 version.txt（仓库中为空文件）
+            printf '%s\n' "$TAG_NAME" > "$TARGET_DIR/version.txt"
+            (cd Skin_Keyboard/万象-元书 && zip -r "$ASSET" "WanxiangSkin" -x "*.DS_Store" -x "__MACOSX" -x "._*")
+            PACKAGED_FILES="Skin_Keyboard/万象-元书/${ASSET}"
+            PACKAGED_NOTES="- \`${ASSET}\`：WanxiangSkin（万象键盘r404r，v7 起的主皮肤）"
+            echo "Packaged: ${ASSET}"
+          fi
+
+          {
+            echo "packaged_files<<EOF"
+            echo "$PACKAGED_FILES"
+            echo "EOF"
+            echo "packaged_notes<<EOF"
+            echo "$PACKAGED_NOTES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Combine packaged files list
         id: all_files
         env:
@@ -181,10 +223,12 @@ jobs:
           FILES_WANXIANG: ${{ steps.wanxiang_dir.outputs.packaged_files }}
           NOTES_YUANSHU: ${{ steps.yuanshu_dirs.outputs.packaged_notes }}
           NOTES_WANXIANG: ${{ steps.wanxiang_dir.outputs.packaged_notes }}
+          FILES_WANXIANGSKIN: ${{ steps.wanxiangskin_dir.outputs.packaged_files }}
+          NOTES_WANXIANGSKIN: ${{ steps.wanxiangskin_dir.outputs.packaged_notes }}
         run: |
           # Remove empty lines
-          FILES=$(printf '%s\n%s\n' "$FILES_YUANSHU" "$FILES_WANXIANG" | sed '/^$/d')
-          NOTES=$(printf '%s\n%s\n' "$NOTES_YUANSHU" "$NOTES_WANXIANG" | sed '/^$/d')
+          FILES=$(printf '%s\n%s\n%s\n' "$FILES_WANXIANGSKIN" "$FILES_YUANSHU" "$FILES_WANXIANG" | sed '/^$/d')
+          NOTES=$(printf '%s\n%s\n%s\n' "$NOTES_WANXIANGSKIN" "$NOTES_YUANSHU" "$NOTES_WANXIANG" | sed '/^$/d')
           {
             echo "notes<<EOF"
             echo "$NOTES"
