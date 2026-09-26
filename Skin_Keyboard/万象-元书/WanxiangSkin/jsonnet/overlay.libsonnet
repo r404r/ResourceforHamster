@@ -58,12 +58,14 @@ local zmSwipes(base, table) = merge([swipe(base, k, 'Down', table[k][0], table[k
 local shiftSwipes = { shiftButton+: { swipeUpAction: { shortcut: '#简繁切换' }, swipeDownAction: { character: '\\' } } };
 
 // 5. 删除键：上划 #重输（清空 preedit，RIME-20260926-013）；
-//    下划：元书没有 #undo 指令（按"无动作"处理，RIME-20260926-015 O1）→ 平时不设动作，
-//    输入时发送 Control+BackSpace（万象 v18 editor: back_syllable，删除一个音节）
+//    下划：元书没有 #undo 指令（按"无动作"处理，RIME-20260926-015 O1）→ 输入时发送 Control+BackSpace
+//    （万象 v18 editor: back_syllable，删除一个音节）；平时无动作。
+//    注意：划动方向没有设置动作时，元书会把这次划动当作点按（真机：下划删掉一个字，RIME-20260926-016）→
+//    平时必须显式给一个无效动作。这里用 #重输：没有 preedit 时它什么也不做（真机 RIME-20260926-013 R2）
 local backspace(base) = {
   backspaceButton+: {
     swipeUpAction: { shortcut: '#重输' },
-    swipeDownAction:: null,
+    swipeDownAction: { shortcut: '#重输' },
     notification: ['backspaceButtonPreeditNotification'],
   },
   backspaceButtonPreeditNotification: {
@@ -77,8 +79,8 @@ local backspace(base) = {
     swipeDownAction: { sendKeys: 'Control+BackSpace' },
   },
 };
-// 英文键盘：去掉无效的 #undo（上划保持上游 #deleteText）
-local backspaceEn = { backspaceButton+: { swipeDownAction:: null } };
+// 英文键盘：无效的 #undo 换成显式的无效动作 #重输（原因同上；上划保持上游 #deleteText）
+local backspaceEn = { backspaceButton+: { swipeDownAction: { shortcut: '#重输' } } };
 
 // 6. 底行：中英键在空格左侧，"，。"键在空格右侧（用户决定，2026-09-26）
 local swapBottomRow(node, cn2en) =
