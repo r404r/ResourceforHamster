@@ -46,123 +46,96 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
           echo "Tag message: $TAG_MESSAGE"
 
+      - name: Find previous release tag
+        id: prev
+        env:
+          CURRENT_TAG: ${{ github.ref_name }}
+        run: |
+          # 对比基准：当前 commit 祖先中最近创建的另一个 release/* tag（RIME-20260926-009）。
+          # 只看祖先链，避免与其他分支上的发布比较；找不到基准（首次发布）时全部打包。
+          PREV_TAG=$(git tag --merged HEAD --list 'release/*' --sort=-creatordate | grep -vxF "$CURRENT_TAG" | head -n 1 || true)
+          echo "prev_tag=$PREV_TAG" >> "$GITHUB_OUTPUT"
+          if [ -n "$PREV_TAG" ]; then
+            echo "Previous release tag: $PREV_TAG ($(git rev-parse --short "$PREV_TAG^{commit}"))"
+          else
+            echo "No previous release tag found in history; every skin will be packaged"
+          fi
+
       - name: Check and package 元书- directories
         id: yuanshu_dirs
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.tag_name }}
+          PREV_TAG: ${{ steps.prev.outputs.prev_tag }}
         run: |
           # Set UTF-8 locale to handle Chinese characters properly
           export LANG=C.UTF-8
           export LC_ALL=C.UTF-8
-          
-          # Get the current commit (the one the tag points to)
-          CURRENT_COMMIT=$(git rev-parse HEAD)
-          echo "Current commit: $CURRENT_COMMIT"
-          echo "Checking for updates in the last 5 commits from HEAD"
-          
+
+          # 目录自上一个 release 以来有变更才打包（无基准时视为有变更）
+          changed() { [ -z "$PREV_TAG" ] || ! git diff --quiet "$PREV_TAG" HEAD -- "$1"; }
+
           PACKAGED_FILES=""
-          
+
           # Find all directories starting with "元书-" in Skin_Keyboard
           for dir in Skin_Keyboard/元书-*; do
-            if [ -d "$dir" ]; then
-              echo "Checking directory: $dir"
-              
-              # Debug: Show recent commits in this directory
-              echo "Recent commits (last 5) in $dir:"
-              git log -5 --pretty=format:"%H %ai %s" -- "$dir" || echo "No commits found"
-              echo ""
-              
-              # Check if there are any commits in the last 5 commits from HEAD in this directory
-              COMMITS_RECENT=$(git log -5 --pretty=format:"%H" -- "$dir" | wc -l)
-              
-              if [ "$COMMITS_RECENT" -gt 0 ]; then
-                echo "Found $COMMITS_RECENT recent commits in $dir"
-                
-                # Get directory name without path
-                DIR_NAME=$(basename "$dir")
-                
-                # Create zip file (exclude macOS metadata files)
-                cd Skin_Keyboard
-                zip -r "${DIR_NAME}.zip" "${DIR_NAME}" -x "*.DS_Store" -x "__MACOSX" -x "._*"
-                
-                # Rename to .cskin with tag name
-                mv "${DIR_NAME}.zip" "${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
-                
-                # Remove any macOS metadata files that might have been created
-                rm -f "._${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
-                
-                # Add to list of packaged files
-                if [ -z "$PACKAGED_FILES" ]; then
-                  PACKAGED_FILES="Skin_Keyboard/${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
-                else
-                  PACKAGED_FILES="$PACKAGED_FILES
-          Skin_Keyboard/${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
-                fi
-                
-                cd ..
-                echo "Packaged: ${DIR_NAME}_${{ steps.tag.outputs.tag_name }}.cskin"
-              else
-                echo "No recent commits in $dir, skipping"
-              fi
+            [ -d "$dir" ] || continue
+            DIR_NAME=$(basename "$dir")
+
+            if ! changed "$dir"; then
+              echo "Unchanged since $PREV_TAG, skipping: $dir"
+              continue
             fi
+            echo "Changed since ${PREV_TAG:-<none>}: $dir"
+            [ -n "$PREV_TAG" ] && git diff --stat "$PREV_TAG" HEAD -- "$dir" | tail -n 1
+
+            # Create zip file (exclude macOS metadata files)
+            (cd Skin_Keyboard && zip -r "${DIR_NAME}_${TAG_NAME}.cskin" "${DIR_NAME}" -x "*.DS_Store" -x "__MACOSX" -x "._*")
+            PACKAGED_FILES="${PACKAGED_FILES}Skin_Keyboard/${DIR_NAME}_${TAG_NAME}.cskin"$'\n'
+            echo "Packaged: ${DIR_NAME}_${TAG_NAME}.cskin"
           done
-          
+
           # Save packaged files list
-          echo "packaged_files<<EOF" >> $GITHUB_OUTPUT
-          echo "$PACKAGED_FILES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "packaged_files<<EOF"
+            printf '%s' "$PACKAGED_FILES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Check and package 26键-万象-元书 directory
         id: wanxiang_dir
+        env:
+          TAG_NAME: ${{ steps.tag.outputs.tag_name }}
+          PREV_TAG: ${{ steps.prev.outputs.prev_tag }}
         run: |
           # Set UTF-8 locale to handle Chinese characters properly
           export LANG=C.UTF-8
           export LC_ALL=C.UTF-8
-          
-          CURRENT_COMMIT=$(git rev-parse HEAD)
-          echo "Current commit: $CURRENT_COMMIT"
-          echo "Checking for updates in the last 5 commits from HEAD"
+
+          changed() { [ -z "$PREV_TAG" ] || ! git diff --quiet "$PREV_TAG" HEAD -- "$1"; }
+
           TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
-          
           PACKAGED_FILES=""
-          
-          if [ -d "$TARGET_DIR" ]; then
-            echo "Checking directory: $TARGET_DIR"
-            
-            # Debug: Show recent commits in this directory
-            echo "Recent commits (last 5) in $TARGET_DIR:"
-            git log -5 --pretty=format:"%H %ai %s" -- "$TARGET_DIR" || echo "No commits found"
-            echo ""
-            
-            # Check if there are any commits in the last 5 commits from HEAD in this directory
-            COMMITS_RECENT=$(git log -5 --pretty=format:"%H" -- "$TARGET_DIR" | wc -l)
-            
-            if [ "$COMMITS_RECENT" -gt 0 ]; then
-              echo "Found $COMMITS_RECENT recent commits in $TARGET_DIR"
-              
-              # Create zip file (exclude macOS metadata files)
-              cd Skin_Keyboard/万象-元书
-              zip -r "26keys-wanxiang-ys.zip" "26键-万象-元书" -x "*.DS_Store" -x "__MACOSX" -x "._*"
-              
-              # Rename to .cskin with tag name
-              mv "26keys-wanxiang-ys.zip" "26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
-              
-              # Remove any macOS metadata files that might have been created
-              rm -f "._26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
-              
-              PACKAGED_FILES="Skin_Keyboard/万象-元书/26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
-              
-              cd ../..
-              echo "Packaged: 26keys-wanxiang-ys_${{ steps.tag.outputs.tag_name }}.cskin"
-            else
-              echo "No recent commits in $TARGET_DIR, skipping"
-            fi
-          else
+
+          if [ ! -d "$TARGET_DIR" ]; then
             echo "Directory $TARGET_DIR does not exist"
+          elif ! changed "$TARGET_DIR"; then
+            echo "Unchanged since $PREV_TAG, skipping: $TARGET_DIR"
+          else
+            echo "Changed since ${PREV_TAG:-<none>}: $TARGET_DIR"
+            [ -n "$PREV_TAG" ] && git diff --stat "$PREV_TAG" HEAD -- "$TARGET_DIR" | tail -n 1
+
+            # Create zip file (exclude macOS metadata files)
+            (cd Skin_Keyboard/万象-元书 && zip -r "26keys-wanxiang-ys_${TAG_NAME}.cskin" "26键-万象-元书" -x "*.DS_Store" -x "__MACOSX" -x "._*")
+            PACKAGED_FILES="Skin_Keyboard/万象-元书/26keys-wanxiang-ys_${TAG_NAME}.cskin"
+            echo "Packaged: 26keys-wanxiang-ys_${TAG_NAME}.cskin"
           fi
-          
+
           # Save packaged files list
-          echo "packaged_files<<EOF" >> $GITHUB_OUTPUT
-          echo "$PACKAGED_FILES" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo "packaged_files<<EOF"
+            echo "$PACKAGED_FILES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Combine packaged files list
         id: all_files
@@ -204,6 +177,8 @@ jobs:
             ## 元书 皮肤包发布
 
             构建日期： ${{ steps.all_files.outputs.build_date }}
+
+            对比基准： ${{ steps.prev.outputs.prev_tag || '（无，首次发布）' }}（仅打包自该版本以来有变更的皮肤）
             
             ### 包含文件：
             ${{ steps.all_files.outputs.files }}
@@ -224,5 +199,5 @@ jobs:
       - name: No files to release
         if: steps.all_files.outputs.files == ''
         run: |
-          echo "No directories with today's updates found. No release created."
+          echo "::warning::No skin changed since ${{ steps.prev.outputs.prev_tag }}. No release created."
           exit 0
