@@ -1,0 +1,75 @@
+/* 让 comment 出现在 text 下方 + 更紧凑的整体布局 */
+.fcitx-candidate .fcitx-candidate-inner {
+    display: grid;
+    grid-template-columns: auto auto 1fr; /* mark | label | content */
+    grid-template-rows: auto auto; /* text / comment */
+
+    /* 候选项之间更紧凑 */
+    column-gap: 5px;
+    row-gap: 1px;
+
+    /* 整体 padding 稍微收紧 */
+    padding: 4px 8px;
+
+    align-items: center;
+}
+
+/* 选中态左侧竖条 */
+.fcitx-candidate .fcitx-mark {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+
+    align-self: center;
+    justify-self: center;
+
+    height: 68%;
+    border-radius: 999px;
+}
+
+/* 序号 */
+.fcitx-candidate .fcitx-label {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+
+    align-self: center;
+
+    /* 稍微紧凑一点 */
+    line-height: 1;
+
+    /* 可选：稍微加粗但不要太占空间 */
+    font-weight: 500;
+}
+
+/* 候选词文字 */
+.fcitx-candidate .fcitx-text {
+    grid-column: 3;
+    grid-row: 1;
+
+    /* 候选字稍微大一点 */
+    font-size: 1.08em;
+    line-height: 1.15;
+
+    /* 稍微加一点字重，更清晰 */
+    font-weight: 500;
+}
+
+/* 注释 */
+.fcitx-candidate .fcitx-comment {
+    grid-column: 3;
+    grid-row: 2;
+
+    /* comment 与候选字颜色一致 */
+    color: inherit;
+
+    /* 比正文略小即可 */
+    font-size: 0.82em;
+
+    /* 去掉变灰效果 */
+    opacity: 1;
+
+    /* 更紧凑 */
+    line-height: 1.05;
+
+    /* 减少和正文距离 */
+    margin-top: -1px;
+}
