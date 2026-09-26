@@ -154,15 +154,15 @@
     enable_preedit: true,
 
     // shift 在预编辑状态的动作
-    preedit_action: { character: '/' },
+    preedit_action: 'shift',  // r404r：预编辑态仍为 shift（v6 行为）
 
     // shift 在预编辑状态显示的 sf symbol
     // 为空时使用默认符号
-    preedit_sf_symbol: '',
+    preedit_sf_symbol: 'shift',  // r404r
 
     // 26键shift按键预编辑状态上划操作
     // 可选：分词、辅助筛选，分词为'，辅助筛选为`
-    preedit_swipeup_action: '辅助筛选',
+    preedit_swipeup_action: '分词',  // r404r：上划 ' 分词（v6 行为）
   },
 
   // 横向候选栏最右侧按钮：

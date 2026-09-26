@@ -1,6 +1,7 @@
 // 皮肤总入口只负责渲染，不在此展开键盘选择与配置细节。
 local keyboards = import './build/keyboardRegistry.libsonnet';
 local config = import './build/skinConfig.libsonnet';
+local overlay = import './overlay.libsonnet';  // r404r 个人定制覆盖层（ADR-0006）
 
 
 // 输出文件生成
@@ -8,13 +9,13 @@ local themes = ['light', 'dark'];
 local orientations = ['portrait', 'landscape'];
 
 local render(module, prefix) = {
-  [theme + '/' + prefix + '_' + orientation + '.yaml']: std.toString(module.new(theme, orientation))
+  [theme + '/' + prefix + '_' + orientation + '.yaml']: std.toString(overlay.apply(prefix, theme, orientation, module.new(theme, orientation)))
   for theme in themes
   for orientation in orientations
 };
 
 {
-  'config.yaml': std.manifestYamlDoc(config, indent_array_in_object=true, quote_keys=false),
+  'config.yaml': std.manifestYamlDoc(config + overlay.config, indent_array_in_object=true, quote_keys=false),
 } +
 render(keyboards.pinyin, 'pinyin_26') +
 render(keyboards.tempPinyin, 'temp_pinyin') +
