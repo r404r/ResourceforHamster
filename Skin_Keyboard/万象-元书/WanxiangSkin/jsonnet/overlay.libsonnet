@@ -186,6 +186,9 @@ local panelRows = [
 local panel(base, orientation) =
   { keyboardLayout: [{ HStack: { subviews: [{ Cell: b[0] } for b in row] } } for row in panelRows] }
   + { keyboardStyle+: { insets: if orientation == 'portrait' then { top: 20, bottom: 20, left: 24, right: 24 } else { top: 5, bottom: 5, left: 24, right: 24 } } }
+  // 浮动面板尺寸与按键背景边距沿用 v6：上游只有 2 行，把面板高度压到 0.55 / 0.65，3 行时图标与文字会重叠（真机截图，2026-09-26）
+  + { floatTargetScale: if orientation == 'portrait' then { x: 0.75, y: 0.8 } else { x: 0.45, y: 0.8 } }
+  + { ButtonBackgroundStyle+: { insets: { top: 15, bottom: 10, left: 3, right: 3 } } }
   + merge([
     {
       [b[0]]: base.FinderButton { action: b[1], foregroundStyle: [b[0] + 'ForegroundStyle', b[0] + 'ForegroundStyle2'], size: { height: '1/2' } },
