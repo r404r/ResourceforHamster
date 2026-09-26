@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           # Fetch all tags with their annotations
@@ -23,6 +23,12 @@ jobs:
           TAG_NAME="${GITHUB_REF#refs/tags/release/}"
           echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
           echo "Tag name without prefix: $TAG_NAME"
+
+          # 预发布约定（RIME-20260926-010）：tag 带 -alpha / -beta / -rc / -exp / -test 后缀
+          # （如 release/v6.0.2.0-exp1）→ 标记为 pre-release，且不设为 Latest
+          if [[ "$TAG_NAME" =~ -(alpha|beta|rc|exp|test)[0-9.]*$ ]]; then PRERELEASE=true; else PRERELEASE=false; fi
+          echo "prerelease=$PRERELEASE" >> $GITHUB_OUTPUT
+          echo "Prerelease: $PRERELEASE"
           
           # Debug: Check tag type and availability
           echo "Checking tag: ${GITHUB_REF}"
@@ -74,7 +80,23 @@ jobs:
           # 目录自上一个 release 以来有变更才打包（无基准时视为有变更）
           changed() { [ -z "$PREV_TAG" ] || ! git diff --quiet "$PREV_TAG" HEAD -- "$1"; }
 
+          # 资产名必须是 ASCII：GitHub 会规范化非 ASCII 文件名（元书-空山素影_vX.cskin → -._vX.cskin），
+          # 多个包会被改成同一个名字而互相覆盖。元书按包内目录名导入，不依赖资产文件名。
+          asset_base() {
+            case "$1" in
+              元书-仿仓默认) echo "fangcang-moren-ys" ;;
+              元书-空山素影) echo "kongshan-suying-ys" ;;
+              元书-送你一朵小红花-元书) echo "xiaohonghua-ys" ;;
+              *)
+                local h
+                h=$(printf '%s' "$1" | sha1sum | cut -c1-8)
+                echo "::warning::No ASCII asset name mapped for $1; using ys-skin-$h (add it to asset_base)" >&2
+                echo "ys-skin-$h" ;;
+            esac
+          }
+
           PACKAGED_FILES=""
+          PACKAGED_NOTES=""
 
           # Find all directories starting with "元书-" in Skin_Keyboard
           for dir in Skin_Keyboard/元书-*; do
@@ -88,16 +110,26 @@ jobs:
             echo "Changed since ${PREV_TAG:-<none>}: $dir"
             [ -n "$PREV_TAG" ] && git diff --stat "$PREV_TAG" HEAD -- "$dir" | tail -n 1
 
+            ASSET="$(asset_base "$DIR_NAME")_${TAG_NAME}.cskin"
+            if [[ ! "$ASSET" =~ ^[A-Za-z0-9._-]+$ ]]; then
+              echo "::error::Asset name is not ASCII-safe: $ASSET"
+              exit 1
+            fi
+
             # Create zip file (exclude macOS metadata files)
-            (cd Skin_Keyboard && zip -r "${DIR_NAME}_${TAG_NAME}.cskin" "${DIR_NAME}" -x "*.DS_Store" -x "__MACOSX" -x "._*")
-            PACKAGED_FILES="${PACKAGED_FILES}Skin_Keyboard/${DIR_NAME}_${TAG_NAME}.cskin"$'\n'
-            echo "Packaged: ${DIR_NAME}_${TAG_NAME}.cskin"
+            (cd Skin_Keyboard && zip -r "$ASSET" "${DIR_NAME}" -x "*.DS_Store" -x "__MACOSX" -x "._*")
+            PACKAGED_FILES="${PACKAGED_FILES}Skin_Keyboard/${ASSET}"$'\n'
+            PACKAGED_NOTES="${PACKAGED_NOTES}- \`${ASSET}\`：${DIR_NAME}"$'\n'
+            echo "Packaged: ${ASSET} (${DIR_NAME})"
           done
 
           # Save packaged files list
           {
             echo "packaged_files<<EOF"
             printf '%s' "$PACKAGED_FILES"
+            echo "EOF"
+            echo "packaged_notes<<EOF"
+            printf '%s' "$PACKAGED_NOTES"
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
@@ -115,6 +147,7 @@ jobs:
 
           TARGET_DIR="Skin_Keyboard/万象-元书/26键-万象-元书"
           PACKAGED_FILES=""
+          PACKAGED_NOTES=""
 
           if [ ! -d "$TARGET_DIR" ]; then
             echo "Directory $TARGET_DIR does not exist"
@@ -127,6 +160,7 @@ jobs:
             # Create zip file (exclude macOS metadata files)
             (cd Skin_Keyboard/万象-元书 && zip -r "26keys-wanxiang-ys_${TAG_NAME}.cskin" "26键-万象-元书" -x "*.DS_Store" -x "__MACOSX" -x "._*")
             PACKAGED_FILES="Skin_Keyboard/万象-元书/26keys-wanxiang-ys_${TAG_NAME}.cskin"
+            PACKAGED_NOTES="- \`26keys-wanxiang-ys_${TAG_NAME}.cskin\`：26键-万象-元书"
             echo "Packaged: 26keys-wanxiang-ys_${TAG_NAME}.cskin"
           fi
 
@@ -135,16 +169,27 @@ jobs:
             echo "packaged_files<<EOF"
             echo "$PACKAGED_FILES"
             echo "EOF"
+            echo "packaged_notes<<EOF"
+            echo "$PACKAGED_NOTES"
+            echo "EOF"
           } >> "$GITHUB_OUTPUT"
 
       - name: Combine packaged files list
         id: all_files
+        env:
+          FILES_YUANSHU: ${{ steps.yuanshu_dirs.outputs.packaged_files }}
+          FILES_WANXIANG: ${{ steps.wanxiang_dir.outputs.packaged_files }}
+          NOTES_YUANSHU: ${{ steps.yuanshu_dirs.outputs.packaged_notes }}
+          NOTES_WANXIANG: ${{ steps.wanxiang_dir.outputs.packaged_notes }}
         run: |
-          FILES="${{ steps.yuanshu_dirs.outputs.packaged_files }}
-          ${{ steps.wanxiang_dir.outputs.packaged_files }}"
-          
           # Remove empty lines
-          FILES=$(echo "$FILES" | sed '/^$/d')
+          FILES=$(printf '%s\n%s\n' "$FILES_YUANSHU" "$FILES_WANXIANG" | sed '/^$/d')
+          NOTES=$(printf '%s\n%s\n' "$NOTES_YUANSHU" "$NOTES_WANXIANG" | sed '/^$/d')
+          {
+            echo "notes<<EOF"
+            echo "$NOTES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
           
           # Clean up any macOS metadata files in the workspace
           echo "Searching for metadata files to clean up..."
@@ -169,7 +214,7 @@ jobs:
 
       - name: Create Release
         if: steps.all_files.outputs.files != ''
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ steps.tag.outputs.tag_name }}
@@ -180,8 +225,8 @@ jobs:
 
             对比基准： ${{ steps.prev.outputs.prev_tag || '（无，首次发布）' }}（仅打包自该版本以来有变更的皮肤）
             
-            ### 包含文件：
-            ${{ steps.all_files.outputs.files }}
+            ### 包含文件（资产名：皮肤目录）：
+            ${{ steps.all_files.outputs.notes }}
 
             ### 使用说明：
             下载 .cskin 文件后，在元书输入法中导入即可，或者在iOS中直接点击此文件，选择元书输入法打开
@@ -192,6 +237,9 @@ jobs:
             ${{ steps.tag.outputs.tag_message }}
             
           files: ${{ steps.all_files.outputs.files }}
+          fail_on_unmatched_files: true
+          prerelease: ${{ steps.tag.outputs.prerelease }}
+          make_latest: ${{ steps.tag.outputs.prerelease == 'true' && 'false' || 'true' }}
           token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
