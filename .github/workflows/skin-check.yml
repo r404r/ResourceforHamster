@@ -1,0 +1,28 @@
+name: Skin Check
+
+# WanxiangSkin 覆盖层检查（RIME-20260926-017）：渲染皮肤并按 tools/skin-check/expect.json 断言 r404r 个人定制仍然生效。
+on:
+  push:
+    paths:
+      - 'Skin_Keyboard/万象-元书/WanxiangSkin/**'
+      - 'tools/skin-check/**'
+      - '.github/workflows/skin-check.yml'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r tools/skin-check/requirements.txt
+
+      - name: Render WanxiangSkin and check overlay assertions
+        run: tools/skin-check/check.sh "$RUNNER_TEMP/render"

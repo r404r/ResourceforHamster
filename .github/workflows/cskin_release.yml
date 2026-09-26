@@ -16,6 +16,17 @@ jobs:
           # Fetch all tags with their annotations
           fetch-tags: true
 
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Check WanxiangSkin overlay（失败则不打包、不发布）
+        run: |
+          # RIME-20260926-017：渲染 WanxiangSkin 并按 tools/skin-check/expect.json 断言个人定制仍然生效
+          pip install -r tools/skin-check/requirements.txt
+          tools/skin-check/check.sh "$RUNNER_TEMP/render"
+
       - name: Extract tag name and message
         id: tag
         run: |
