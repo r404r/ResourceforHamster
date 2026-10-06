@@ -222,6 +222,18 @@ local panel(base, orientation) =
     for b in row
   ]);
 
+// 万象 v18.1.0 把"翻译"开关 chinese_english 改名为 english_chinese（只剩英译中）。上游皮肤仍引用旧名
+// （rimeOptionLabel$chinese_english / rime$chinese_english），在此对渲染结果统一改名。
+// 只替换含 "$chinese_english" 的字符串；上游日后自行改名后本函数不再命中，可删除。RIME-20261006-001
+local OLD_OPT = '$chinese_english';
+local NEW_OPT = '$english_chinese';
+local renameOption(node) =
+  if std.isString(node) then
+    (if std.length(std.findSubstr(OLD_OPT, node)) > 0 then std.strReplace(node, OLD_OPT, NEW_OPT) else node)
+  else if std.isArray(node) then std.map(renameOption, node)
+  else if std.isObject(node) then { [k]: renameOption(node[k]) for k in std.objectFields(node) }
+  else node;
+
 // ---------------------------------------------------------------------------
 {
   // 皮肤元信息（config.yaml）
@@ -229,7 +241,7 @@ local panel(base, orientation) =
 
   apply(prefix, theme, orientation, base)::
     local common = spaceLabel(base) + enterLabel(base) + arrowIcons(base) + button123(base) + toolbar(base);
-    base + (
+    renameOption(base + (
       if prefix == 'pinyin_26' then
         portraitInsets(orientation) + qpSwipes(base, 'character') + zmSwipes(base, zmPinyin)
         + shiftSwipes + backspace(base) + bottomRow(base, 'cn2enButton', true) + cn2enMenu + common
@@ -246,5 +258,5 @@ local panel(base, orientation) =
       else if prefix == 'panel' then
         panel(base, orientation)
       else {}
-    ),
+    )),
 }
