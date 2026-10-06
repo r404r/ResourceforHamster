@@ -1,16 +1,19 @@
-// 汇总最终参与输出的键盘模块，并根据 Custom 选择手机端拼音布局。
-local Settings = import '../Custom.libsonnet';
-
-local pinyin =
-  if Settings.keyboard_layout == 18 then import '../keyboards/pinyinGrouped/pinyin18/keyboard.libsonnet'
-  else if Settings.keyboard_layout == 17 then import '../keyboards/pinyinGrouped/pinyin17/keyboard.libsonnet'
-  else if Settings.keyboard_layout == 14 then import '../keyboards/pinyinGrouped/pinyin14/keyboard.libsonnet'
-  else if Settings.keyboard_layout == 9 then import '../keyboards/pinyin9/keyboard.libsonnet'
-  else import '../keyboards/keyboard26/pinyin/keyboard.libsonnet';
-
+// 汇总最终参与输出的键盘模块。
+// 注册可参与输出的全部键盘模块；main.jsonnet 再按布局切换开关选择实际产物。
 {
-  pinyin: pinyin,
+  // iPhone 中文拼音模块。26 与 27 共用同一键盘族，靠 new() 的 layoutOverride 区分分号键。
+  pinyin9: import '../keyboards/pinyin9/keyboard.libsonnet',
+  pinyin14: import '../keyboards/pinyinGrouped/pinyin14/keyboard.libsonnet',
+  pinyin17: import '../keyboards/pinyinGrouped/pinyin17/keyboard.libsonnet',
+  pinyin18: import '../keyboards/pinyinGrouped/pinyin18/keyboard.libsonnet',
+  pinyin26: import '../keyboards/keyboard26/pinyin/keyboard.libsonnet',
+
+  // 布局切换浮动面板（由工具栏 keyboard_switcher 打开）。
+  layoutSwitch: import '../keyboards/layoutSwitch/keyboard.libsonnet',
+
   tempPinyin: import '../keyboards/keyboard26/tempPinyin/keyboard.libsonnet',
+  pinyinWithReturn: import '../keyboards/returnPath/pinyin.libsonnet',
+  alphabeticFromPinyin: import '../keyboards/keyboard26/alphabetic/fromPinyin.libsonnet',
   alphabetic: import '../keyboards/keyboard26/alphabetic/keyboard.libsonnet',
   numeric: import '../keyboards/numeric9/keyboard.libsonnet',
   panel: import '../keyboards/floatPanel/keyboard.libsonnet',

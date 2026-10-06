@@ -6,6 +6,10 @@ alphabetic:
   iPhone:
     landscape: "alphabetic_26_landscape"
     portrait: "alphabetic_26_portrait"
+alphabetic26:
+  iPhone:
+    landscape: "alphabetic_26_landscape"
+    portrait: "alphabetic_26_portrait"
 author: "BlackCCCat, r404r"
 name: "万象键盘r404r-v7"
 numeric:
@@ -25,6 +29,10 @@ pinyin:
     floating: "pinyin_26_portrait"
     landscape: "ipad_pinyin_26_landscape"
     portrait: "ipad_pinyin_26_portrait"
+  iPhone:
+    landscape: "pinyin_26_landscape"
+    portrait: "pinyin_26_portrait"
+pinyin26:
   iPhone:
     landscape: "pinyin_26_landscape"
     portrait: "pinyin_26_portrait"

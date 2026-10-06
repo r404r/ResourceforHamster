@@ -16,7 +16,7 @@ local functionButtonStyles = import '../../../components/functionRow/styles.libs
 local systemKeys = import '../../../components/systemKeys/index.libsonnet';
 
 {
-  createButtonFactory(context, swipeUp, swipeDown, wanxiangSetting=null)::
+  createButtonFactory(context, swipeUp, swipeDown)::
     function(id, actionKey, size, bounds, root, theme)
       {
         size: size,
@@ -41,11 +41,8 @@ local systemKeys = import '../../../components/systemKeys/index.libsonnet';
         [if std.length(actionKey) == 1 then 'capsLockedStateForegroundStyle']: self.uppercasedStateForegroundStyle,
         hintStyle: id + 'ButtonHintStyle',
         action: {
-          local isWanxiangSetting =
-            std.type(wanxiangSetting) == 'string'
-            && wanxiangSetting != ''
-            && std.get(context.Settings, wanxiangSetting, false),
-          character: if isWanxiangSetting then std.asciiUpper(actionKey) else actionKey,
+          // 14/17/18 键均发小写代表键；大写仅通过 uppercasedStateAction（shift）触发。
+          character: actionKey,
         },
         [if std.length(actionKey) == 1 then 'uppercasedStateAction']: {
           character: std.asciiUpper(actionKey),
@@ -66,7 +63,7 @@ local systemKeys = import '../../../components/systemKeys/index.libsonnet';
     local swipeDown = if std.objectHas(swipeDataRoot, spec.swipeDownName) then swipeDataRoot[spec.swipeDownName] else {};
     local hintStyles = hintSymbolsStyles.getStyle(theme, familyData[spec.hintData]);
     local sharedSystemKeys = systemKeys.buildReusable(context, keyboardLayout);
-    local createButton = self.createButtonFactory(context, swipeUp, swipeDown, std.get(spec, 'wanxiangSetting', null));
+    local createButton = self.createButtonFactory(context, swipeUp, swipeDown);
     keyboardLayout[spec.layoutName] +
     swipeStyles.getStyle('cn', theme, swipeUp, swipeDown) +
     toolbar.getToolBar(theme) +

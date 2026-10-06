@@ -1,5 +1,6 @@
 // 工具栏按钮注册表，统一维护可配置按钮标识、滑动按钮样式名和滑动按钮动作。
 local shared = import './config.libsonnet';
+local Settings = import '../../Custom.libsonnet';
 
 {
   // action 主要供 horizontalSymbols 滑动按钮使用。
@@ -29,6 +30,13 @@ local shared = import './config.libsonnet';
       cellName: 'toolbarButtonClipboardStyle',
       slideStyleName: 'toolbarButtonClipboardStyle',
       action: { shortcutCommand: '#showPasteboardView' },
+    },
+    // 打开布局切换浮动面板（config.yaml 的 keyboard_switcher 槽位）。
+    // 受 Custom.enable_layout_switcher 控制：关闭时不注册该 ID，工具栏配置数组里的同名项会被自动过滤。
+    [if Settings.enable_layout_switcher then 'keyboard_switcher']: {
+      cellName: 'toolbarButtonKeyboardSwitcherStyle',
+      slideStyleName: 'toolbarButtonKeyboardSwitcherStyle',
+      action: { floatKeyboardType: 'keyboard_switcher' },
     },
     hide: {
       cellName: 'toolbarButtonHideStyle',

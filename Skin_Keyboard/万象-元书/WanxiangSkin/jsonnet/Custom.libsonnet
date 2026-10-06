@@ -10,6 +10,22 @@
   // 其他值会回退到 26
   keyboard_layout: 26,
 
+  // 布局切换功能总开关（默认关闭）。
+  // false: 只构建 keyboard_layout 指定的默认布局，工具栏不注册 keyboard_switcher 按钮。
+  // true:  构建全部布局并显示 keyboard_switcher 按钮，切换时按下方配置绑定 Rime 方案。
+  enable_layout_switcher: false,
+
+  // 布局切换浮动面板使用的 Rime 方案名；按需修改为设备上已部署的方案 ID。
+  // 仅在 enable_layout_switcher: true 时生效；选择任一中文布局时同时切换绑定的方案。
+  keyboard_layout_schemas: {
+    '9': 'wanxiang_t9i',
+    '14': 'wanxiang_14',
+    '17': 'wanxiang_17',
+    '18': 'wanxiang_18',
+    '26': 'wanxiang_pro',
+    '27': 'wanxiang_pro',
+  },
+
   // 9键按键长按符号是否直接上屏
   wanxiang_9_hintSymbol: true,
   // 9键键盘是否交换左下角数字键盘和符号键盘按钮位置
@@ -17,11 +33,7 @@
   // 数字键盘是否交换左侧返回按钮和右侧切换键盘按钮位置
   swap_numeric_return_symbol: false,
 
-  // 是否使用万象18键转写规则（大写转写）
-  is_wanxiang_18: true,
-
-  // 是否使用万象14键转写规则（大写转写）
-  is_wanxiang_14: true,
+  // 14/17/18 键发送小写代表键，大写仅由 Shift 状态触发。
 
   // 功能按键配置
   function_button_config: {
@@ -197,6 +209,7 @@
     // symbols: 符号栏
     // note: 常用语
     // clipboard: 剪切板
+    // keyboard_switcher: 布局切换浮动面板（9/14/17/18/26/27 键互相切换）
     // hide: 收起键盘
     // menu_or_panel: 键盘菜单或浮动键盘
     // google: Google 搜索
@@ -238,6 +251,7 @@
       right_slide: [
         'note',
         'clipboard',
+        'keyboard_switcher',
         'symbol',
         'emoji',
         // 数组末尾可继续添加按钮 ID。
@@ -256,6 +270,7 @@
         'google',
         'note',
         'clipboard',
+        'keyboard_switcher',
         'emoji',
         'symbol',
         'skin_adjust',

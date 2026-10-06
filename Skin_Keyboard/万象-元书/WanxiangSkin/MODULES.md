@@ -16,9 +16,9 @@
 
 ### `jsonnet/build/`
 
-- `skinConfig.libsonnet`：皮肤元信息和 `config.yaml` 键盘映射。
-- `keyboardRegistry.libsonnet`：按 `keyboard_layout` 选择拼音键盘并注册所有输出模块。
-- `context.libsonnet`：设备上下文、基础尺寸、键盘布局汇总和功能行插入。
+- `skinConfig.libsonnet`：皮肤元信息、有效布局集合和 `config.yaml` 键盘映射；关闭布局切换时只注册默认布局槽位。
+- `keyboardRegistry.libsonnet`：注册所有可参与输出的模块；`main.jsonnet` 根据 `enable_layout_switcher` 选择默认布局或全部布局。
+- `context.libsonnet`：设备上下文、基础尺寸、键盘布局汇总和功能行插入；`withLayout()` 负责按布局覆写 `Settings.keyboard_layout`。
 
 旧的一行式 `entries/` 已取消。新增完整输出键盘时直接更新 `keyboardRegistry.libsonnet`、`skinConfig.libsonnet` 和 `main.jsonnet`。
 
