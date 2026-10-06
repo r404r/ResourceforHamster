@@ -222,17 +222,24 @@ local panel(base, orientation) =
     for b in row
   ]);
 
-// 万象 v18.1.0 把"翻译"开关 chinese_english 改名为 english_chinese（只剩英译中）。上游皮肤仍引用旧名
-// （rimeOptionLabel$chinese_english / rime$chinese_english），在此对渲染结果统一改名。
-// 只替换含 "$chinese_english" 的字符串；上游日后自行改名后本函数不再命中，可删除。RIME-20261006-001
+// 万象 v18.1.0 把"翻译"开关 chinese_english 改名为 english_chinese（只剩英译中）。上游皮肤仍引用旧名，
+// 只出现在中英键长按菜单的 4 个样式节点（pinyin_26 / temp_pinyin / ipad_pinyin_26）。这里只改这 4 处。
+// v7.1.0.0 曾用递归遍历整份配置统一替换，渲染慢约 30 倍，元书中一直 loading → v7.1.0.1 改为精确覆盖。RIME-20261006-001
+// 上游日后自行改名后不再命中（字符串中无旧名时原样保留），可删除。
 local OLD_OPT = '$chinese_english';
 local NEW_OPT = '$english_chinese';
-local renameOption(node) =
-  if std.isString(node) then
-    (if std.length(std.findSubstr(OLD_OPT, node)) > 0 then std.strReplace(node, OLD_OPT, NEW_OPT) else node)
-  else if std.isArray(node) then std.map(renameOption, node)
-  else if std.isObject(node) then { [k]: renameOption(node[k]) for k in std.objectFields(node) }
-  else node;
+local ren(s) = if std.isString(s) then std.strReplace(s, OLD_OPT, NEW_OPT) else s;
+local renameOption(base) =
+  local textFix(k) = if has(base, k) && has(base[k], 'text') then { [k]+: { text: ren(base[k].text) } } else {};
+  local condFix(k) =
+    if has(base, k) && has(base[k], 'foregroundStyle') && std.isArray(base[k].foregroundStyle) then
+      { [k]+: { foregroundStyle: [
+        if std.isObject(e) && has(e, 'conditionKey') then e { conditionKey: ren(e.conditionKey) } else e
+        for e in base[k].foregroundStyle
+      ] } }
+    else {};
+  textFix('cn2enButtonHintSymbolsForegroundStyleOf4') + textFix('cn2enButtonHintSymbolsForegroundStyleOf5')
+  + condFix('cn2enButtonHintSymbolsStyleOf4');
 
 // ---------------------------------------------------------------------------
 {
@@ -241,7 +248,7 @@ local renameOption(node) =
 
   apply(prefix, theme, orientation, base)::
     local common = spaceLabel(base) + enterLabel(base) + arrowIcons(base) + button123(base) + toolbar(base);
-    renameOption(base + (
+    base + (
       if prefix == 'pinyin_26' then
         portraitInsets(orientation) + qpSwipes(base, 'character') + zmSwipes(base, zmPinyin)
         + shiftSwipes + backspace(base) + bottomRow(base, 'cn2enButton', true) + cn2enMenu + common
@@ -258,5 +265,5 @@ local renameOption(node) =
       else if prefix == 'panel' then
         panel(base, orientation)
       else {}
-    )),
+    ) + renameOption(base),
 }
