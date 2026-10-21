@@ -37,20 +37,25 @@ local qpSwipes(base, kind) = merge([
 ]);
 
 // 3. z–m 下划：`/` 快捷指令（配合 rime_wanxiang_mod）与简繁切换
+//    b / n 下划：上屏元书常用语（AI prompt 分隔符，用户决定 2026-10-21，RIME-20261021-001；原为 /hb、/nl）。
+//    常用语按标题查找，需在元书 App 中建好「P代码块」「P三花括号」，并开启键盘完全访问
+local phraseCode = [{ phrase: 'P代码块' }, { text: '```' }];
+local phraseBrace = [{ phrase: 'P三花括号' }, { text: '{{{' }];
 local zmPinyin = {
   z: [{ sendKeys: '/jt' }, { image: 'arrowshape.up.circle.fill' }],
   x: [{ sendKeys: '/sj' }, { image: 'clock.arrow.circlepath' }],
   c: [{ sendKeys: '/rq' }, { image: 'calendar' }],
   v: [{ sendKeys: '/dt' }, { image: 'clock.circle' }],
-  b: [{ sendKeys: '/hb' }, { image: 'chineseyuanrenminbisign.square.fill' }],
-  n: [{ sendKeys: '/nl' }, { image: 'moon.fill' }],  // 农历（用户决定 2026-09-26，RIME-20260926-015 O3；原为与 c 重复的 /rq）
+  b: phraseCode,
+  n: phraseBrace,
   m: [{ shortcut: '#简繁切换' }, { text: '繁' }],
 };
 local zmAlphabetic = {
   x: [{ sendKeys: '/sj' }, { image: 'clock.arrow.circlepath' }],
   c: [{ sendKeys: '/rq' }, { image: 'calendar' }],
   v: [{ sendKeys: '/dt' }, { image: 'clock.circle' }],
-  b: [{ sendKeys: '/hb' }, { image: 'chineseyuanrenminbisign.square.fill' }],
+  b: phraseCode,
+  n: phraseBrace,
 };
 local zmSwipes(base, table) = merge([swipe(base, k, 'Down', table[k][0], table[k][1]) for k in std.objectFields(table)]);
 
