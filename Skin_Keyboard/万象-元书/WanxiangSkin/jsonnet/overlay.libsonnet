@@ -239,17 +239,78 @@ local panel(base, orientation) =
   ]);
 
 // 14. 靠右键盘（元书分体键盘 Split，#toggleSplitState；用户决定 2026-10-28，RIME-20261028-001）
-//    元书单手（右手）模式左侧的「左手模式 / 宽度调节 / 全尺寸」按钮无法隐藏（RIME-20261027-001），
-//    改用 Split：Split 态下竖屏 中文 26（含 temp_pinyin）/ 英文 26 / 数字 9 的按键区、工具栏、预编辑区左侧多留 splitLeft 点，左侧空白点了无反应。
-//    键宽都是行内百分比，随按键区缩窄自动缩放。横屏、iPad、面板不写 split，Split 态下保持原样。
-//    splitLeft 按用户 iPhone 右手模式截图取（430 pt 宽，按键区从约 93 pt 开始，减去按键自身内边距）
-local splitLeft = 90;
-local splitInsets(style) =
-  local ins = if has(style, 'insets') then style.insets else {};
-  { split: { insets: ins { left: (if has(ins, 'left') then ins.left else 0) + splitLeft } } };
+//    元书单手（右手）模式左侧的「左手模式 / 宽度调节 / 全尺寸」按钮无法隐藏（RIME-20261027-001），改用 Split。
+//    exp1 在 keyboardStyle / toolbarStyle / preeditStyle 上写 split 边距，真机无效（Split 下只变成全宽）。
+//    exp2 改用文档里的「中缝键」写法：每行最前面加一颗平时零宽、Split 态撑开到 splitGap 的空白键（不绑 action），
+//    同一行有宽度的键在 Split 态按 (1 - splitGap) 缩窄，保证一行总宽不变；布局 Cell 上的宽度移到按键样式里，才能被 split 覆盖。
+//    数字键盘主体是 3 列 VStack，左侧加一列空白列，3 列样式在 Split 态同样缩窄（列样式能否 split 待真机确认）。
+//    范围：竖屏 中文 26（含 temp_pinyin）/ 英文 26 / 数字 9 的按键区、工具栏、候选栏；横屏、iPad、面板、预编辑区不变。
+//    splitGap 按用户 iPhone 15 Pro Max 右手模式截图取（430 pt 宽，按键区从约 90 pt 开始 ≈ 0.21）
+local splitGap = 0.21;
+local splitScale = 1 - splitGap;
+local pctOf(w) =
+  if std.isObject(w) && has(w, 'percentage') then w.percentage
+  else if std.isString(w) && std.length(std.split(w, '/')) == 2 then
+    std.parseInt(std.split(w, '/')[0]) / std.parseInt(std.split(w, '/')[1])
+  else if std.isNumber(w) then w
+  else null;
+local isCell(s) = std.isObject(s) && has(s, 'Cell');
+// 行：只含 Cell 与空占位 {} 的 HStack；列组：只含 VStack 的 HStack
+local isCellRow(sub) =
+  std.length([s for s in sub if isCell(s)]) > 0
+  && std.length([s for s in sub if !(isCell(s) || (std.isObject(s) && std.length(s) == 0))]) == 0;
+local isColRow(sub) = std.length(sub) > 0 && std.length([s for s in sub if !(std.isObject(s) && has(s, 'VStack'))]) == 0;
+// 只遍历 keyboardLayout / toolbarLayout / horizontalCandidatesLayout 这几棵小树（不遍历整份渲染结果，见 RIME-20261006-001）
+local splitLayout(node) =
+  if std.isArray(node) then std.map(splitLayout, node)
+  else if std.isObject(node) && has(node, 'HStack') then
+    local sub = node.HStack.subviews;
+    if isCellRow(sub) then node { HStack+: { subviews: [{ Cell: 'splitGapButton' }] + [if isCell(s) then s { size:: null } else s for s in sub] } }
+    else if isColRow(sub) then node { HStack+: { subviews: [{ VStack: { style: 'splitGapColumnStyle', subviews: [{ Cell: 'splitGapFillButton' }] } }] + sub } }
+    else node { HStack+: { subviews: splitLayout(sub) } }
+  else node;
+// 被加了中缝键的行里的 Cell：[名称, 布局 Cell 上的宽度或 null]
+local rowCells(node) =
+  if std.isArray(node) then std.flattenArrays([rowCells(n) for n in node])
+  else if std.isObject(node) && has(node, 'HStack') then
+    local sub = node.HStack.subviews;
+    if isCellRow(sub) then [[s.Cell, if has(s, 'size') && has(s.size, 'width') then s.size.width else null] for s in sub if isCell(s)]
+    else if isColRow(sub) then []
+    else rowCells(sub)
+  else [];
+local colStyles(node) =
+  if std.isArray(node) then std.flattenArrays([colStyles(n) for n in node])
+  else if std.isObject(node) && has(node, 'HStack') then
+    local sub = node.HStack.subviews;
+    if isColRow(sub) then [s.VStack.style for s in sub if has(s.VStack, 'style')]
+    else if isCellRow(sub) then []
+    else colStyles(sub)
+  else [];
+local splitWidth(w) = { split: { size: { width: { percentage: pctOf(w) * splitScale } } } };
 local splitRight(prefix, orientation, r) =
+  local layouts = [k for k in ['keyboardLayout', 'toolbarLayout', 'horizontalCandidatesLayout'] if has(r, k)];
   if orientation == 'portrait' && std.member(['pinyin_26', 'temp_pinyin', 'alphabetic_26', 'numeric_9'], prefix) then
-    merge([{ [s]+: splitInsets(r[s]) } for s in ['keyboardStyle', 'toolbarStyle', 'preeditStyle'] if has(r, s)])
+    { [k]: splitLayout(r[k]) for k in layouts }
+    + { splitGapButton: { size: { width: { percentage: 0 } }, split: { size: { width: { percentage: splitGap } } } } }
+    + (if std.length([1 for k in layouts for st in colStyles(r[k])]) > 0 then {
+         splitGapColumnStyle: { size: { width: { percentage: 0 } }, split: { size: { width: { percentage: splitGap } } } },
+         splitGapFillButton: { size: { height: { percentage: 1 } } },
+       } else {})
+    + merge([
+      local c = cw[0];
+      // 布局里引用的样式一定存在，直接取 r[c]；不对整份 r 调 has()（每次都要枚举上千个字段，渲染慢约 5%）
+      local w = if cw[1] != null then cw[1] else if has(r[c], 'size') && has(r[c].size, 'width') then r[c].size.width else null;
+      if w == null || pctOf(w) == null then {}
+      else { [c]+: { size+: { width: w } } + splitWidth(w) }
+      for k in layouts
+      for cw in rowCells(r[k])
+    ])
+    + merge([
+      if has(r[st], 'size') && has(r[st].size, 'width') && pctOf(r[st].size.width) != null
+      then { [st]+: splitWidth(r[st].size.width) } else {}
+      for k in layouts
+      for st in colStyles(r[k])
+    ])
   else {};
 
 // 万象 v18.1.0 把"翻译"开关 chinese_english 改名为 english_chinese（只剩英译中）。上游皮肤仍引用旧名，
