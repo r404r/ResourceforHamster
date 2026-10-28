@@ -31,6 +31,10 @@
   "@keyboardStyle.insets.left": 0,
   "@keyboardStyle.insets.right": 0,
   "@keyboardStyle.insets.top": 0,
+  "@keyboardStyle.split.insets.bottom": 0,
+  "@keyboardStyle.split.insets.left": 90,
+  "@keyboardStyle.split.insets.right": 0,
+  "@keyboardStyle.split.insets.top": 0,
   "@layout[0]": [
    "leftButton",
    "headButton",
@@ -365,6 +369,10 @@
   "@keyboardStyle.insets.left": 0,
   "@keyboardStyle.insets.right": 0,
   "@keyboardStyle.insets.top": 0,
+  "@keyboardStyle.split.insets.bottom": 0,
+  "@keyboardStyle.split.insets.left": 90,
+  "@keyboardStyle.split.insets.right": 0,
+  "@keyboardStyle.split.insets.top": 0,
   "@layout[0]": [
    "leftButton",
    "headButton",
@@ -508,9 +516,17 @@
   "@keyboardStyle.insets.bottom": 0,
   "@keyboardStyle.insets.left": 0,
   "@keyboardStyle.insets.right": 0,
-  "@keyboardStyle.insets.top": 0
+  "@keyboardStyle.insets.top": 0,
+  "@keyboardStyle.split.insets.bottom": 0,
+  "@keyboardStyle.split.insets.left": 90,
+  "@keyboardStyle.split.insets.right": 0,
+  "@keyboardStyle.split.insets.top": 0
  },
  "light/numeric_9_portrait.yaml": {
+  "@keyboardStyle.split.insets.bottom": 3,
+  "@keyboardStyle.split.insets.left": 94,
+  "@keyboardStyle.split.insets.right": 4,
+  "@keyboardStyle.split.insets.top": 3,
   "@toolbarHeight": 50,
   "@toolbar[0].cellStyle.foregroundStyle.buttonStyleType": "geometry",
   "@toolbar[0].contentRightToLeft": false,
@@ -575,11 +591,11 @@
  },
  "light/panel_portrait.yaml": {
   "@floatTargetScale.x": 0.95,
-  "@floatTargetScale.y": 0.8,
-  "@keyboardStyle.insets.bottom": 20,
+  "@floatTargetScale.y": 0.9,
+  "@keyboardStyle.insets.bottom": 12,
   "@keyboardStyle.insets.left": 8,
   "@keyboardStyle.insets.right": 8,
-  "@keyboardStyle.insets.top": 20,
+  "@keyboardStyle.insets.top": 12,
   "@layout[0]": [
    "KeyboardSettingsButton",
    "SwitcherButton",
@@ -597,6 +613,9 @@
    "LeftHandModeButton",
    "RightHandModeButton",
    "KeyboardThemeButton"
+  ],
+  "@layout[3]": [
+   "SplitRightButton"
   ],
   "DeployButton.action.openURL": "hamster3://com.ihsiao.apps.hamster3/rime?action=deploy",
   "DeployButton.foregroundStyle[0].buttonStyleType": "systemImage",
@@ -643,6 +662,11 @@
   "ScriptButton.foregroundStyle[0].systemImageName": "apple.terminal.fill",
   "ScriptButton.foregroundStyle[1].buttonStyleType": "text",
   "ScriptButton.foregroundStyle[1].text": "脚本管理",
+  "SplitRightButton.action.shortcut": "#toggleSplitState",
+  "SplitRightButton.foregroundStyle[0].buttonStyleType": "systemImage",
+  "SplitRightButton.foregroundStyle[0].systemImageName": "rectangle.righthalf.inset.filled",
+  "SplitRightButton.foregroundStyle[1].buttonStyleType": "text",
+  "SplitRightButton.foregroundStyle[1].text": "靠右键盘",
   "SwitcherButton.action.shortcutCommand": "#RimeSwitcher",
   "SwitcherButton.foregroundStyle[0].buttonStyleType": "systemImage",
   "SwitcherButton.foregroundStyle[0].systemImageName": "filemenu.and.selection",
@@ -661,6 +685,6 @@
  },
  "light/panel_landscape.yaml": {
   "@floatTargetScale.x": 0.55,
-  "@floatTargetScale.y": 0.8
+  "@floatTargetScale.y": 0.9
  }
 }

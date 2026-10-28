@@ -22,7 +22,7 @@ VISUAL = {
     'lowerEdgeColor', 'normalBorderColor', 'highlightBorderColor', 'fontFamily',
     'contentMode', 'insets',
 }
-KEEP_INSETS_UNDER = {'keyboardStyle'}  # 容器边距影响触摸区（ADR-0005），保留
+KEEP_INSETS_UNDER = {'keyboardStyle', 'split'}  # 容器边距影响触摸区（ADR-0005）；split 态的边距决定靠右键盘（RIME-20261028-001），保留
 
 
 def load(path):

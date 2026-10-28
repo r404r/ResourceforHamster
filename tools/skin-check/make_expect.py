@@ -12,7 +12,7 @@ from semantic_keys import semantics, flatten
 
 RULES = {
     'light/pinyin_26_portrait.yaml': [
-        r'^@keyboardStyle\.insets', r'^@layout', r'^[qwertyuiop]Button\.swipe(Up|Down)Action', r'^[qwertyuiop]Button\.foregroundStyle\[[12]\]\.text',
+        r'^@keyboardStyle\.(insets|split)', r'^@layout', r'^[qwertyuiop]Button\.swipe(Up|Down)Action', r'^[qwertyuiop]Button\.foregroundStyle\[[12]\]\.text',
         r'^[qwertyuiop]Button\.hintStyle\.swipe(Up|Down)ForegroundStyle\.text',
         r'^[zxcvbnm]Button\.swipeDownAction', r'^[zxcvbnm]Button\.foregroundStyle\[2\]\.(text|systemImageName)',
         r'^shiftButton\.(swipeUpAction|swipeDownAction|notification\[0\]\.(action|swipeUpAction|foregroundStyle))',
@@ -24,11 +24,11 @@ RULES = {
     ],
     'light/pinyin_26_landscape.yaml': [r'^@layout', r'^spaceSecondButton\.(foregroundStyle\[1\]\.text|swipeUpAction)', r'^spaceRightButton\.(action|swipeUpAction)'],
     'light/alphabetic_26_portrait.yaml': [
-        r'^@keyboardStyle\.insets', r'^@layout', r'^[qwertyuiop]Button\.swipe(Up|Down)Action', r'^[xcvb]Button\.swipeDownAction',
+        r'^@keyboardStyle\.(insets|split)', r'^@layout', r'^[qwertyuiop]Button\.swipe(Up|Down)Action', r'^[xcvb]Button\.swipeDownAction',
         r'^backspaceButton\.swipe', r'^spaceRightButton\.(action|swipeUpAction)', r'^@toolbar',
     ],
-    'light/temp_pinyin_portrait.yaml': [r'^@keyboardStyle\.insets'],
-    'light/numeric_9_portrait.yaml': [r'^@toolbar', r'^(left|right)Button\.foregroundStyle\[0\]\.systemImageName'],
+    'light/temp_pinyin_portrait.yaml': [r'^@keyboardStyle\.(insets|split)'],
+    'light/numeric_9_portrait.yaml': [r'^@keyboardStyle\.split', r'^@toolbar', r'^(left|right)Button\.foregroundStyle\[0\]\.systemImageName'],
     'light/panel_portrait.yaml': [r'^@layout', r'^@keyboardStyle\.insets', r'^@floatTargetScale', r'^[A-Za-z]+Button\.(action|foregroundStyle)'],
     'light/panel_landscape.yaml': [r'^@floatTargetScale'],
 }

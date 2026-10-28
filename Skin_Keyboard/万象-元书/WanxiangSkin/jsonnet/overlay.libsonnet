@@ -194,7 +194,7 @@ local toolbar(base) =
     if has(base, k) && std.isString(base[k].foregroundStyle) && has(base, base[k].foregroundStyle)
   ]) else {};
 
-// 13. 浮动面板：3 行 12 键（决定 8A）
+// 13. 浮动面板：4 行（决定 8A 的 3 行 12 键 + 第 4 行靠右键盘）
 local panelRows = [
   [['KeyboardSettingsButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSettings' }, 'gearshape.fill', '键盘设置'],
    ['SwitcherButton', { shortcutCommand: '#RimeSwitcher' }, 'filemenu.and.selection', '方案开关'],
@@ -208,24 +208,49 @@ local panelRows = [
    ['LeftHandModeButton', { shortcut: '#左手模式' }, 'keyboard.onehanded.left.fill', '左手键盘'],
    ['RightHandModeButton', { shortcut: '#右手模式' }, 'keyboard.onehanded.right.fill', '右手键盘'],
    ['KeyboardThemeButton', { openURL: 'hamster3://com.ihsiao.apps.hamster3/keyboardSkins' }, 'paintpalette.fill', '键盘皮肤']],
+  // 第 4 行：靠右键盘（Split 开关，见 14；用户决定 2026-10-28，RIME-20261028-001）。不足 4 键的行右侧用空白补齐
+  [['SplitRightButton', { shortcut: '#toggleSplitState' }, 'rectangle.righthalf.inset.filled', '靠右键盘']],
 ];
 // 以上游的 FinderButton 为模板（背景、字号、位置等外观沿用上游），只替换动作、图标与文字
 local panel(base, orientation) =
-  { keyboardLayout: [{ HStack: { subviews: [{ Cell: b[0] } for b in row] } } for row in panelRows] }
+  {
+    keyboardLayout: [
+      { HStack: { subviews: [
+        { Cell: b[0] }
+        for b in row
+      ] + (if std.length(row) < 4 then [{}] else []) } }
+      for row in panelRows
+    ],
+  }
   // 面板加宽（用户真机截图，2026-09-26：四字标签占满按键宽度）：左右留白 24 → 8，宽度缩放 0.75 → 0.95（横屏 0.45 → 0.55）
-  + { keyboardStyle+: { insets: if orientation == 'portrait' then { top: 20, bottom: 20, left: 8, right: 8 } else { top: 5, bottom: 5, left: 8, right: 8 } } }
+  + { keyboardStyle+: { insets: if orientation == 'portrait' then { top: 12, bottom: 12, left: 8, right: 8 } else { top: 5, bottom: 5, left: 8, right: 8 } } }
   // 面板高度与按键背景边距沿用 v6：上游只有 2 行，把面板高度压到 0.55 / 0.65，3 行时图标与文字会重叠（真机截图，2026-09-26）
-  + { floatTargetScale: if orientation == 'portrait' then { x: 0.95, y: 0.8 } else { x: 0.55, y: 0.8 } }
-  + { ButtonBackgroundStyle+: { insets: { top: 15, bottom: 10, left: 3, right: 3 } } }
+  // 加第 4 行后（RIME-20261028-001）：面板高 0.8 → 0.9，上下留白 20 → 12，按键背景上下边距 15 / 10 → 8 / 6，抵消每行变矮（待真机确认）
+  + { floatTargetScale: if orientation == 'portrait' then { x: 0.95, y: 0.9 } else { x: 0.55, y: 0.9 } }
+  + { ButtonBackgroundStyle+: { insets: { top: 8, bottom: 6, left: 3, right: 3 } } }
   + merge([
     {
-      [b[0]]: base.FinderButton { action: b[1], foregroundStyle: [b[0] + 'ForegroundStyle', b[0] + 'ForegroundStyle2'], size: { height: '1/2' } },
+      [b[0]]: base.FinderButton { action: b[1], foregroundStyle: [b[0] + 'ForegroundStyle', b[0] + 'ForegroundStyle2'], size: { height: '1/2' } + (if std.length(row) < 4 then { width: '1/4' } else {}) },
       [b[0] + 'ForegroundStyle']: base.FinderButtonForegroundStyle { systemImageName: b[2] },
       [b[0] + 'ForegroundStyle2']: base.FinderButtonForegroundStyle2 { text: b[3] },
     }
     for row in panelRows
     for b in row
   ]);
+
+// 14. 靠右键盘（元书分体键盘 Split，#toggleSplitState；用户决定 2026-10-28，RIME-20261028-001）
+//    元书单手（右手）模式左侧的「左手模式 / 宽度调节 / 全尺寸」按钮无法隐藏（RIME-20261027-001），
+//    改用 Split：Split 态下竖屏 中文 26（含 temp_pinyin）/ 英文 26 / 数字 9 的按键区、工具栏、预编辑区左侧多留 splitLeft 点，左侧空白点了无反应。
+//    键宽都是行内百分比，随按键区缩窄自动缩放。横屏、iPad、面板不写 split，Split 态下保持原样。
+//    splitLeft 按用户 iPhone 右手模式截图取（430 pt 宽，按键区从约 93 pt 开始，减去按键自身内边距）
+local splitLeft = 90;
+local splitInsets(style) =
+  local ins = if has(style, 'insets') then style.insets else {};
+  { split: { insets: ins { left: (if has(ins, 'left') then ins.left else 0) + splitLeft } } };
+local splitRight(prefix, orientation, r) =
+  if orientation == 'portrait' && std.member(['pinyin_26', 'temp_pinyin', 'alphabetic_26', 'numeric_9'], prefix) then
+    merge([{ [s]+: splitInsets(r[s]) } for s in ['keyboardStyle', 'toolbarStyle', 'preeditStyle'] if has(r, s)])
+  else {};
 
 // 万象 v18.1.0 把"翻译"开关 chinese_english 改名为 english_chinese（只剩英译中）。上游皮肤仍引用旧名，
 // 只出现在中英键长按菜单的 4 个样式节点（pinyin_26 / temp_pinyin / ipad_pinyin_26）。这里只改这 4 处。
@@ -252,6 +277,10 @@ local renameOption(base) =
   config: { name: '万象键盘r404r-v7', author: 'BlackCCCat, r404r' },
 
   apply(prefix, theme, orientation, base)::
+    local r = $.applyBase(prefix, theme, orientation, base);
+    r + splitRight(prefix, orientation, r),
+
+  applyBase(prefix, theme, orientation, base)::
     local common = spaceLabel(base) + enterLabel(base) + arrowIcons(base) + button123(base) + toolbar(base);
     base + (
       if prefix == 'pinyin_26' then
