@@ -334,13 +334,36 @@ local renameOption(base) =
   + condFix('cn2enButtonHintSymbolsStyleOf4');
 
 // ---------------------------------------------------------------------------
+// 深色配色（RIME-20261127-005 评估 / 006 实施，用户决定 2026-11-27）：
+// 字母键底色 D1D1D199 → D1D1D170（白字对比度 3.55 → 5.40:1），角标 b6b7b9 → EBEBF0（1.73 → 4.55:1）。浅色不变。
+// 只按样式名精确覆盖，且只在原值仍是上游旧色时替换：上游改色后自动不再生效，不会误改。
+local DARK_KEY_OLD = 'd1d1d199';
+local DARK_KEY_NEW = 'D1D1D170';
+local DARK_HINT_OLD = 'b6b7b9';
+local DARK_HINT_NEW = 'EBEBF0';
+local isColor(style, field, old) =
+  std.isObject(style) && has(style, field) && std.isString(style[field]) && std.asciiLower(style[field]) == old;
+local darkKeyStyles = ['alphabeticBackgroundStyle', 'numberButtonBackgroundStyle', 'functionBackgroundStyle', 'ButtonBackgroundStyle'];
+local darkHintStyles =
+  [std.char(c) + 'Button' + s for c in std.range(97, 122) for s in ['UpForegroundStyle', 'DownForegroundStyle']]
+  + ['spaceButtonForegroundStyle1', 'spaceSecondButtonForegroundStyle1'];
+local darkColors(theme, base) =
+  if theme != 'dark' then {}
+  else merge([{ [n]+: { normalColor: DARK_KEY_NEW } } for n in darkKeyStyles if has(base, n) && isColor(base[n], 'normalColor', DARK_KEY_OLD)])
+       + (if has(base, 'collectionCellBackgroundStyle') && isColor(base.collectionCellBackgroundStyle, 'highlightColor', DARK_KEY_OLD)
+          then { collectionCellBackgroundStyle+: { highlightColor: DARK_KEY_NEW } } else {})
+       + merge([
+         { [n]+: { normalColor: DARK_HINT_NEW } + (if isColor(base[n], 'highlightColor', DARK_HINT_OLD) then { highlightColor: DARK_HINT_NEW } else {}) }
+         for n in darkHintStyles if has(base, n) && isColor(base[n], 'normalColor', DARK_HINT_OLD)
+       ]);
+
 {
   // 皮肤元信息（config.yaml）
   config: { name: '万象键盘r404r-v7', author: 'BlackCCCat, r404r' },
 
   apply(prefix, theme, orientation, base)::
     local r = $.applyBase(prefix, theme, orientation, base);
-    r + splitRight(prefix, orientation, r),
+    r + darkColors(theme, r) + splitRight(prefix, orientation, r),
 
   applyBase(prefix, theme, orientation, base)::
     local common = spaceLabel(base) + enterLabel(base) + arrowIcons(base) + button123(base) + toolbar(base);
