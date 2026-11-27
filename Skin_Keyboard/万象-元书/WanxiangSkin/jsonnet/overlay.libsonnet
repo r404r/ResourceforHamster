@@ -101,7 +101,8 @@ local bottomRow(base, cn2en, pinyin) =
   { keyboardLayout: swapBottomRow(base.keyboardLayout, cn2en) }
   + {
     spaceRightButton+: {
-      swipeUpAction: { character: ',' },
+      // 中文键盘：交给 Rime 转成全角，。英文键盘：symbol 直接上屏半角 ,（与英文键盘其他键一致）。RIME-20261127-004
+      swipeUpAction: if pinyin then { character: ',' } else { symbol: ',' },
       repeatAction:: null,  // v6：该键不连发
     } + (if pinyin then {
       foregroundStyle: ['spaceRightButtonForegroundStyle', 'spaceRightButtonForegroundStyle2'],

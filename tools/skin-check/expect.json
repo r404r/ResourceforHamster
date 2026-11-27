@@ -597,7 +597,7 @@
   "spaceButton.split.size.width.percentage": 0.31600000000000006,
   "spaceRightButton.action.symbol": ".",
   "spaceRightButton.split.size.width.percentage": 0.07900000000000001,
-  "spaceRightButton.swipeUpAction.character": ",",
+  "spaceRightButton.swipeUpAction.symbol": ",",
   "splitGapButton.split.size.width.percentage": 0.21,
   "tButton.split.size.width.percentage": 0.07900000000000001,
   "tButton.swipeDownAction.symbol": "5",
